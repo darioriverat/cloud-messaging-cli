@@ -10,6 +10,7 @@ load_dotenv()
 parser = argparse.ArgumentParser(description='Argument parser for pubsub.')
 parser.add_argument('--create-topic', type=str, help='Name of the topic to create')
 parser.add_argument('--list-topics', action='store_true', help='List all topics in the project')
+parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_FILE")
@@ -55,6 +56,23 @@ elif args.list_topics:
     else:
         print("No topics found in the project.")
 
+# check for arg subscribe
+elif args.subscribe:
+    topic_name, subscription_name = args.subscribe
+
+    print(f"Creating subscription '{subscription_name}' to topic '{topic_name}'")
+
+    subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
+    topic_path = subscriber.topic_path(project_id, topic_name)
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+
+    # Create the subscription
+    subscription = subscriber.create_subscription(
+        request={"name": subscription_path, "topic": topic_path}
+    )
+
+    print(f"Created subscription: {subscription.name}")
+
 else:
-    print("No action specified. Use --create-topic <topic_name> to create a topic or --list-topics to list all topics.")
+    print("No action specified. Use --create-topic <topic_name> to create a topic, --list-topics to list all topics, or --subscribe <topic_name> <subscription_name> to create a subscription.")
 

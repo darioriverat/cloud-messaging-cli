@@ -16,3 +16,17 @@ source .venv/bin/activate
 ```bash
 uv pip install -e .
 ```
+
+## Usage
+
+Create a topic
+
+```shell
+python pubsub.py --create-topic mytopic
+```
+
+Create a subscription
+
+```shell
+python pubsub.py --subscribe mytopic subscription-name
+```
