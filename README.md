@@ -30,3 +30,9 @@ Create a subscription
 ```shell
 python pubsub.py --subscribe mytopic subscription-name
 ```
+
+Publish a message
+
+```shell
+python pubsub.py --publish organisations "My message"
+```

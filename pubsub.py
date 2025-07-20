@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description='Argument parser for pubsub.')
 parser.add_argument('--create-topic', type=str, help='Name of the topic to create')
 parser.add_argument('--list-topics', action='store_true', help='List all topics in the project')
 parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
+parser.add_argument('--publish', nargs=2, metavar=('TOPIC_NAME', 'MESSAGE'), help='Publish a message to a topic')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_FILE")
@@ -73,6 +74,21 @@ elif args.subscribe:
 
     print(f"Created subscription: {subscription.name}")
 
+# check for arg publish
+elif args.publish:
+    topic_name, message = args.publish
+
+    print(f"Publishing message to topic '{topic_name}': {message}")
+
+    publisher = pubsub_v1.PublisherClient.from_service_account_file(service_account_file)
+    topic_path = publisher.topic_path(project_id, topic_name)
+
+    # Publish the message
+    future = publisher.publish(topic_path, message.encode("utf-8"))
+    message_id = future.result()
+
+    print(f"Published message with ID: {message_id}")
+
 else:
-    print("No action specified. Use --create-topic <topic_name> to create a topic, --list-topics to list all topics, or --subscribe <topic_name> <subscription_name> to create a subscription.")
+    print("No action specified. Use --create-topic <topic_name> to create a topic, --list-topics to list all topics, --subscribe <topic_name> <subscription_name> to create a subscription, or --publish <topic_name> <message> to publish a message.")
 
