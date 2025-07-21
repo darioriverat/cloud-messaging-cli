@@ -1,13 +1,13 @@
-# GCP Assistant - Pub/Sub Tool
+# Cloud Messaging CLI
 
-A command-line tool for managing Google Cloud Pub/Sub topics, subscriptions, and messages.
+A command-line tool for managing cloud messaging services including Google Cloud Pub/Sub, with plans to support AWS SNS/SQS, Azure Service Bus, and other cloud messaging platforms.
 
 ## Installation
 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd gcp_assistant
+cd cloud-messaging-cli
 ```
 
 2. Create and activate a virtual environment:
@@ -22,7 +22,7 @@ uv pip install -e .
 ```
 
 4. Set up environment variables:
-Create a `.env` file with your GCP credentials:
+Create a `.env` file with your cloud provider credentials:
 ```
 GCP_PROJECT_ID=your-project-id
 GCP_SERVICE_ACCOUNT_FILE=path/to/your/service-account.json
@@ -154,3 +154,4 @@ python pubsub.py --receive email-subscription 1
 - All messages are automatically acknowledged after processing
 - Use Ctrl+C to stop listening early
 - Make sure your service account has the necessary Pub/Sub permissions
+- Currently supports Google Cloud Pub/Sub, with plans to support other cloud messaging services

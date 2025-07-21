@@ -1,7 +1,7 @@
 [project]
-name = "gcp-assistant"
+name = "cloud-messaging-cli"
 version = "0.1.0"
-description = "Add your description here"
+description = "A command-line tool for managing cloud messaging services (Pub/Sub, SNS/SQS, etc.)"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
