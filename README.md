@@ -49,6 +49,13 @@ python pubsub.py --create-topic mytopic
 python pubsub.py --subscribe mytopic subscription-name
 ```
 
+**Create a subscription with message ordering enabled:**
+```bash
+python pubsub.py --subscribe mytopic subscription-name --ordered
+```
+
+> **Note**: Message ordering ensures that messages with the same ordering key are delivered in the order they were published. This is useful for scenarios where message sequence matters (e.g., user actions, financial transactions).
+
 ### Message Publishing
 
 **Publish a message to a topic:**
@@ -104,6 +111,11 @@ python pubsub.py --listen subscription-name 120
    python pubsub.py --subscribe notifications email-subscription
    ```
 
+   **Or create a subscription with message ordering:**
+   ```bash
+   python pubsub.py --subscribe notifications email-subscription --ordered
+   ```
+
 3. **Publish a message:**
    ```bash
    python pubsub.py --publish notifications "Hello, this is a test message!"
@@ -142,7 +154,7 @@ python pubsub.py --receive email-subscription 1
 |---------|-------------|---------|
 | `--list-topics` | List all topics in the project | `python pubsub.py --list-topics` |
 | `--create-topic <name>` | Create a new topic | `python pubsub.py --create-topic mytopic` |
-| `--subscribe <topic> <subscription>` | Create a subscription to a topic | `python pubsub.py --subscribe mytopic mysub` |
+| `--subscribe <topic> <subscription> [--ordered]` | Create a subscription to a topic (with optional message ordering) | `python pubsub.py --subscribe mytopic mysub --ordered` |
 | `--publish <topic> <message>` | Publish a message to a topic | `python pubsub.py --publish mytopic "Hello"` |
 | `--receive <subscription> [count]` | Receive pending messages (optional count) | `python pubsub.py --receive mysub 5` |
 | `--listen <subscription> [timeout]` | Listen for new messages (optional timeout in seconds) | `python pubsub.py --listen mysub 60` |
@@ -155,3 +167,17 @@ python pubsub.py --receive email-subscription 1
 - Use Ctrl+C to stop listening early
 - Make sure your service account has the necessary Pub/Sub permissions
 - Currently supports Google Cloud Pub/Sub, with plans to support other cloud messaging services
+
+## Message Ordering
+
+When you create a subscription with the `--ordered` flag, messages with the same ordering key will be delivered in the order they were published. This is particularly useful for:
+
+- **Sequential Processing**: Events that must be processed in order (e.g., user actions, financial transactions)
+- **State Management**: Scenarios where message order affects the final state
+- **Data Consistency**: Ensuring data integrity when order matters
+
+**Important Considerations:**
+- Message ordering only works for messages with the same ordering key
+- Ordered subscriptions have slightly reduced throughput compared to unordered subscriptions
+- Existing subscriptions cannot be modified to enable ordering - you must create new subscriptions
+- When publishing messages to ordered subscriptions, consider using ordering keys for related messages

@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser(description='Argument parser for pubsub.')
 parser.add_argument('--create-topic', type=str, help='Name of the topic to create')
 parser.add_argument('--list-topics', action='store_true', help='List all topics in the project')
 parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
+parser.add_argument('--ordered', action='store_true', help='Enable message ordering for subscription (use with --subscribe)')
 parser.add_argument('--publish', nargs=2, metavar=('TOPIC_NAME', 'MESSAGE'), help='Publish a message to a topic')
 parser.add_argument('--receive', nargs='+', metavar=('SUBSCRIPTION_NAME', 'MAX_MESSAGES'), help='Receive pending messages from a subscription (optional: specify max number of messages)')
 parser.add_argument('--listen', nargs='+', metavar=('SUBSCRIPTION_NAME', 'TIMEOUT'), help='Listen for messages from a subscription (optional: specify timeout in seconds, default: 60 seconds)')
@@ -65,17 +66,23 @@ elif args.subscribe:
     topic_name, subscription_name = args.subscribe
 
     print(f"Creating subscription '{subscription_name}' to topic '{topic_name}'")
+    if args.ordered:
+        print("Message ordering enabled for this subscription")
 
     subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
     topic_path = subscriber.topic_path(project_id, topic_name)
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
-    # Create the subscription
-    subscription = subscriber.create_subscription(
-        request={"name": subscription_path, "topic": topic_path}
-    )
+    # Create the subscription with optional message ordering
+    subscription_request = {"name": subscription_path, "topic": topic_path}
+    if args.ordered:
+        subscription_request["enable_message_ordering"] = True
+
+    subscription = subscriber.create_subscription(request=subscription_request)
 
     print(f"Created subscription: {subscription.name}")
+    if args.ordered:
+        print("✓ Message ordering is enabled for this subscription")
 
 # check for arg publish
 elif args.publish:
@@ -190,5 +197,5 @@ elif args.listen:
         streaming_pull_future.result()
 
 else:
-    print("No action specified. Use --create-topic <topic_name> to create a topic, --list-topics to list all topics, --subscribe <topic_name> <subscription_name> to create a subscription, --publish <topic_name> <message> to publish a message, --receive <subscription_name> [max_messages] to receive pending messages, or --listen <subscription_name> [timeout] to listen for messages.")
+    print("No action specified. Use --create-topic <topic_name> to create a topic, --list-topics to list all topics, --subscribe <topic_name> <subscription_name> [--ordered] to create a subscription (with optional message ordering), --publish <topic_name> <message> to publish a message, --receive <subscription_name> [max_messages] to receive pending messages, or --listen <subscription_name> [timeout] to listen for messages.")
 
