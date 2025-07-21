@@ -63,6 +63,13 @@ python pubsub.py --subscribe mytopic subscription-name --ordered
 python pubsub.py --publish mytopic "Your message here"
 ```
 
+**Publish a message with an ordering key:**
+```bash
+python pubsub.py --publish mytopic "Your message here" --ordering-key user-123
+```
+
+> **Note**: Ordering keys are used with ordered subscriptions to ensure messages with the same key are delivered in the order they were published. This is essential for maintaining message sequence for related events.
+
 ### Message Receiving
 
 **Receive all pending messages from a subscription:**
@@ -121,6 +128,11 @@ python pubsub.py --listen subscription-name 120
    python pubsub.py --publish notifications "Hello, this is a test message!"
    ```
 
+   **Or publish with an ordering key:**
+   ```bash
+   python pubsub.py --publish notifications "Hello, this is a test message!" --ordering-key user-123
+   ```
+
 4. **Receive pending messages:**
    ```bash
    python pubsub.py --receive email-subscription
@@ -155,7 +167,7 @@ python pubsub.py --receive email-subscription 1
 | `--list-topics` | List all topics in the project | `python pubsub.py --list-topics` |
 | `--create-topic <name>` | Create a new topic | `python pubsub.py --create-topic mytopic` |
 | `--subscribe <topic> <subscription> [--ordered]` | Create a subscription to a topic (with optional message ordering) | `python pubsub.py --subscribe mytopic mysub --ordered` |
-| `--publish <topic> <message>` | Publish a message to a topic | `python pubsub.py --publish mytopic "Hello"` |
+| `--publish <topic> <message> [--ordering-key <key>]` | Publish a message to a topic (with optional ordering key) | `python pubsub.py --publish mytopic "Hello" --ordering-key user-123` |
 | `--receive <subscription> [count]` | Receive pending messages (optional count) | `python pubsub.py --receive mysub 5` |
 | `--listen <subscription> [timeout]` | Listen for new messages (optional timeout in seconds) | `python pubsub.py --listen mysub 60` |
 
@@ -179,5 +191,35 @@ When you create a subscription with the `--ordered` flag, messages with the same
 **Important Considerations:**
 - Message ordering only works for messages with the same ordering key
 - Ordered subscriptions have slightly reduced throughput compared to unordered subscriptions
-- Existing subscriptions cannot be modified to enable ordering - you must create new subscriptions
+- Existing subscriptions cannot be modified to enable ordering - you must create new ones
 - When publishing messages to ordered subscriptions, consider using ordering keys for related messages
+- Ordering keys should be consistent for related messages (e.g., use user ID for user actions, transaction ID for financial operations)
+- The publisher automatically handles message ordering when ordering keys are provided
+
+### Example: User Action Sequencing
+
+Here's how to use ordering keys to ensure user actions are processed in order:
+
+1. **Create a topic:**
+   ```bash
+   python pubsub.py --create-topic user-actions
+   ```
+
+2. **Create an ordered subscription:**
+   ```bash
+   python pubsub.py --subscribe user-actions user-actions-sub --ordered
+   ```
+
+3. **Publish user actions with the same ordering key:**
+   ```bash
+   python pubsub.py --publish user-actions "User logged in" --ordering-key user-123
+   python pubsub.py --publish user-actions "User updated profile" --ordering-key user-123
+   python pubsub.py --publish user-actions "User made purchase" --ordering-key user-123
+   ```
+
+4. **Receive messages (they will be in order):**
+   ```bash
+   python pubsub.py --receive user-actions-sub
+   ```
+
+All messages with the same ordering key (`user-123`) will be delivered in the exact order they were published.

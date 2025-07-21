@@ -10,10 +10,12 @@ load_dotenv()
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Argument parser for pubsub.')
 parser.add_argument('--create-topic', type=str, help='Name of the topic to create')
+parser.add_argument('--enable-ordering', action='store_true', help='Enable message ordering for topic (use with --create-topic)')
 parser.add_argument('--list-topics', action='store_true', help='List all topics in the project')
 parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
 parser.add_argument('--ordered', action='store_true', help='Enable message ordering for subscription (use with --subscribe)')
 parser.add_argument('--publish', nargs=2, metavar=('TOPIC_NAME', 'MESSAGE'), help='Publish a message to a topic')
+parser.add_argument('--ordering-key', type=str, help='Ordering key for message ordering (use with --publish)')
 parser.add_argument('--receive', nargs='+', metavar=('SUBSCRIPTION_NAME', 'MAX_MESSAGES'), help='Receive pending messages from a subscription (optional: specify max number of messages)')
 parser.add_argument('--listen', nargs='+', metavar=('SUBSCRIPTION_NAME', 'TIMEOUT'), help='Listen for messages from a subscription (optional: specify timeout in seconds, default: 60 seconds)')
 
@@ -89,15 +91,33 @@ elif args.publish:
     topic_name, message = args.publish
 
     print(f"Publishing message to topic '{topic_name}': {message}")
+    if args.ordering_key:
+        print(f"Using ordering key: {args.ordering_key}")
 
     publisher = pubsub_v1.PublisherClient.from_service_account_file(service_account_file)
     topic_path = publisher.topic_path(project_id, topic_name)
 
-    # Publish the message
-    future = publisher.publish(topic_path, message.encode("utf-8"))
-    message_id = future.result()
+        # Publish the message with optional ordering key
+    if args.ordering_key:
+        # Configure publisher options for message ordering
+        publisher_options = pubsub_v1.types.PublisherOptions(
+            enable_message_ordering=True
+        )
+        publisher = pubsub_v1.PublisherClient.from_service_account_file(
+            service_account_file,
+            publisher_options=publisher_options
+        )
 
-    print(f"Published message with ID: {message_id}")
+        # Publish with ordering key
+        future = publisher.publish(topic_path, message.encode("utf-8"), ordering_key=args.ordering_key)
+        message_id = future.result()
+        print(f"Published message with ID: {message_id}")
+        print(f"✓ Message published with ordering key: {args.ordering_key}")
+    else:
+        # Use regular publish for unordered messages
+        future = publisher.publish(topic_path, message.encode("utf-8"))
+        message_id = future.result()
+        print(f"Published message with ID: {message_id}")
 
 # check for arg receive (single message)
 elif args.receive:
@@ -197,5 +217,5 @@ elif args.listen:
         streaming_pull_future.result()
 
 else:
-    print("No action specified. Use --create-topic <topic_name> to create a topic, --list-topics to list all topics, --subscribe <topic_name> <subscription_name> [--ordered] to create a subscription (with optional message ordering), --publish <topic_name> <message> to publish a message, --receive <subscription_name> [max_messages] to receive pending messages, or --listen <subscription_name> [timeout] to listen for messages.")
+    print("No action specified. Use --create-topic <topic_name> [--enable-ordering] to create a topic (with optional message ordering), --list-topics to list all topics, --subscribe <topic_name> <subscription_name> [--ordered] to create a subscription (with optional message ordering), --publish <topic_name> <message> [--ordering-key <key>] to publish a message (with optional ordering key), --receive <subscription_name> [max_messages] to receive pending messages, or --listen <subscription_name> [timeout] to listen for messages.")
 
