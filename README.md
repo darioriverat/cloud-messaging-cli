@@ -21,12 +21,35 @@ source .venv/bin/activate
 uv pip install -e .
 ```
 
-4. Set up environment variables:
-Create a `.env` file with your cloud provider credentials:
+## Configuration
+
+The following environment variables are available and must be setup in order to
+connect with the Pub/Sub service:
+
 ```
 GCP_PROJECT_ID=your-project-id
 GCP_SERVICE_ACCOUNT_FILE=path/to/your/service-account.json
 ```
+
+### GCP
+
+#### Creating a Service Account in GCP
+
+1. Once you're logged into GCP, go to **IAM & Admin > Service Accounts**.
+2. Click **“Create Service Account”**.
+3. Enter a name for the service account and click **“Create and Continue”**.
+4. In the **Permissions** step:
+   -  Open the **Role** dropdown.
+   - Select **“Pub/Sub Admin”**.
+   - Click **“Continue”**, then **“Done”**.
+
+#### Creating a Service Account Key (JSON):
+
+1. After the service account is created, click the **three vertical dots** next to it and select **“Manage Keys”**.
+2. Click **“Add Key”** and choose **“Create new key”**.
+3. Select **JSON** as the key type and click **“Create”**.
+
+The key file will be downloaded to your computer. Store it securely, as it contains credentials for accessing your GCP services.
 
 ## Usage
 
