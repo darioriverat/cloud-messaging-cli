@@ -25,11 +25,17 @@ python cloud-storage.py --create-bucket my-bucket-name
 python cloud-storage.py --create-bucket my-bucket-name --region us-central1
 ```
 
+**List all buckets in the project:**
+```bash
+python cloud-storage.py --list-buckets
+```
+
 ## Command Reference
 
 | Command | Description | Example |
 |---------|-------------|---------|
 | `--create-bucket <name>` | Create a new bucket | `python cloud-storage.py --create-bucket my-bucket` |
+| `--list-buckets` | List all buckets in the project | `python cloud-storage.py --list-buckets` |
 | `--region <region>` | Specify the region for bucket creation | `python cloud-storage.py --create-bucket my-bucket --region us-central1` |
 
 ## Common GCP Regions
@@ -54,3 +60,4 @@ Here are some commonly used GCP regions for bucket creation:
 - If no region is specified, the bucket will be created in the default location (usually `us-central1`)
 - Make sure your service account has the necessary Storage permissions
 - Bucket creation is an idempotent operation - if the bucket already exists, the command will succeed
+- The `--list-buckets` command shows bucket names, locations, and location types for all buckets in your project
