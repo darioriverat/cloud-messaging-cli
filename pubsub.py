@@ -213,5 +213,4 @@ elif args.listen:
         streaming_pull_future.result()
 
 else:
-    print("No action specified. Use --create-topic <topic_name> [--enable-ordering] to create a topic (with optional message ordering), --list-topics to list all topics, --subscribe <topic_name> <subscription_name> [--ordered] to create a subscription (with optional message ordering), --publish <topic_name> <message> [--ordering-key <key>] to publish a message (with optional ordering key), --receive <subscription_name> [max_messages] to receive pending messages, or --listen <subscription_name> [timeout] to listen for messages.")
-
+    print(parser.format_help())

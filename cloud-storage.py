@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser(description='Argument parser for cloud storage.
 parser.add_argument('--create-bucket', type=str, help='Name of the bucket to create')
 parser.add_argument('--list-buckets', action='store_true', help='List all buckets in the project')
 parser.add_argument('--region', type=str, help='Region for the bucket (e.g., us-central1, europe-west1)')
+parser.add_argument('--upload-file', nargs=2, metavar=('BUCKET_NAME', 'FILE_PATH'), help='Upload a file to a bucket')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
@@ -68,5 +69,18 @@ elif args.list_buckets:
     else:
         print("No buckets found in the project.")
 
+if args.upload_file:
+    bucket_name, file_path = args.upload_file
+
+    print(f"Uploading file: {file_path} to bucket: {bucket_name}")
+
+    storage_client = storage.Client.from_service_account_json(service_account_file)
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(file_path)
+    blob.upload_from_filename(file_path)
+
+    print(f"File {file_path} uploaded to bucket {bucket_name}")
+
 else:
-    print("No action specified. Use --create-bucket <bucket_name> [--region <region>] to create a bucket, or --list-buckets to list all buckets.")
+    print(parser.format_help())

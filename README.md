@@ -80,11 +80,17 @@ Manage Google Cloud Storage buckets.
 
 **Quick Start:**
 ```bash
+# List all buckets
+python cloud-storage.py --list-buckets
+
 # Create a bucket in default location
 python cloud-storage.py --create-bucket my-bucket-name
 
 # Create a bucket in specific region
 python cloud-storage.py --create-bucket my-bucket-name --region us-central1
+
+# Upload a file to a bucket
+python cloud-storage.py --upload-file my-bucket-name file.txt
 ```
 
 📖 **[Full Cloud Storage Documentation](docs/cloud-storage.md)**
