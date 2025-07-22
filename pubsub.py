@@ -20,11 +20,7 @@ parser.add_argument('--receive', nargs='+', metavar=('SUBSCRIPTION_NAME', 'MAX_M
 parser.add_argument('--listen', nargs='+', metavar=('SUBSCRIPTION_NAME', 'TIMEOUT'), help='Listen for messages from a subscription (optional: specify timeout in seconds, default: 60 seconds)')
 
 project_id = os.getenv("GCP_PROJECT_ID")
-service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_FILE")
-
-# print project and service account path
-#print(f"Project ID: {project_id}")
-# print(f"Service Account File: {service_account_file}")
+service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
 
 args = parser.parse_args()
 

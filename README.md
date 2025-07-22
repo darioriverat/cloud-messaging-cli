@@ -28,7 +28,7 @@ connect with the Pub/Sub service:
 
 ```
 GCP_PROJECT_ID=your-project-id
-GCP_SERVICE_ACCOUNT_FILE=path/to/your/service-account.json
+GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ```
 
 ### GCP
