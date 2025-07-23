@@ -20,11 +20,19 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 python bigquery.py --create-dataset my-dataset-name
 ```
 
+### Table Management
+
+**Create a table in a dataset:**
+```bash
+python bigquery.py --create-table my-dataset-name my-table-name
+```
+
 ## Command Reference
 
 | Command | Description | Example |
 |---------|-------------|---------|
 | `--create-dataset <name>` | Create a new dataset | `python bigquery.py --create-dataset my-dataset` |
+| `--create-table <dataset> <table>` | Create a new table in a dataset | `python bigquery.py --create-table my-dataset my-table` |
 
 ## Common BigQuery Locations
 

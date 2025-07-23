@@ -124,6 +124,9 @@ Manage Google BigQuery datasets and tables.
 ```bash
 # Create a dataset
 python bigquery.py --create-dataset my-dataset-name
+
+# Create a table in a dataset
+python bigquery.py --create-table my-dataset-name my-table-name
 ```
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**
