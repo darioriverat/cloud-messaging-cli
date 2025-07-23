@@ -25,6 +25,13 @@ python pubsub.py --list-topics
 python pubsub.py --create-topic mytopic
 ```
 
+**Delete a topic:**
+```bash
+python pubsub.py --delete-topic mytopic
+```
+
+> **Important Note**: Deleting a topic will permanently remove it. However, subscriptions to the topic will remain and must be deleted separately. This action cannot be undone. Make sure you have backed up any important data before deletion.
+
 ### Subscription Management
 
 **Create a subscription to a topic:**
@@ -98,6 +105,7 @@ python pubsub.py --listen subscription-name 120
 |---------|-------------|---------|
 | `--list-topics` | List all topics in the project | `python pubsub.py --list-topics` |
 | `--create-topic <name>` | Create a new topic | `python pubsub.py --create-topic mytopic` |
+| `--delete-topic <name>` | Delete a topic | `python pubsub.py --delete-topic mytopic` |
 | `--subscribe <topic> <subscription> [--ordered]` | Create a subscription to a topic (with optional message ordering) | `python pubsub.py --subscribe mytopic mysub --ordered` |
 | `--delete-subscription <name>` | Delete a subscription | `python pubsub.py --delete-subscription mysub` |
 | `--publish <topic> <message> [--ordering-key <key>]` | Publish a message to a topic (with optional ordering key) | `python pubsub.py --publish mytopic "Hello" --ordering-key user-123` |

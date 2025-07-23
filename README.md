@@ -73,6 +73,9 @@ python pubsub.py --receive subscription-name
 
 # Delete a subscription
 python pubsub.py --delete-subscription subscription-name
+
+# Delete a topic (⚠️ permanent)
+python pubsub.py --delete-topic mytopic
 ```
 
 📖 **[Full Pub/Sub Documentation](docs/pubsub.md)**
