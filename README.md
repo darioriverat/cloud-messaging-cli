@@ -70,6 +70,9 @@ python pubsub.py --publish mytopic "Hello World"
 
 # Receive messages
 python pubsub.py --receive subscription-name
+
+# Delete a subscription
+python pubsub.py --delete-subscription subscription-name
 ```
 
 📖 **[Full Pub/Sub Documentation](docs/pubsub.md)**

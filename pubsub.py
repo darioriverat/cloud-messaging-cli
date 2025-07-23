@@ -17,6 +17,7 @@ parser.add_argument('--publish', nargs=2, metavar=('TOPIC_NAME', 'MESSAGE'), hel
 parser.add_argument('--ordering-key', type=str, help='Ordering key for message ordering (use with --publish)')
 parser.add_argument('--receive', nargs='+', metavar=('SUBSCRIPTION_NAME', 'MAX_MESSAGES'), help='Receive pending messages from a subscription (optional: specify max number of messages)')
 parser.add_argument('--listen', nargs='+', metavar=('SUBSCRIPTION_NAME', 'TIMEOUT'), help='Listen for messages from a subscription (optional: specify timeout in seconds, default: 60 seconds)')
+parser.add_argument('--delete-subscription', type=str, help='Name of the subscription to delete')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
@@ -210,6 +211,19 @@ elif args.listen:
         # Cancel the subscription
         streaming_pull_future.cancel()
         streaming_pull_future.result()
+
+# check for arg delete_subscription
+elif args.delete_subscription:
+    subscription_name = args.delete_subscription
+
+    print(f"Deleting subscription: {subscription_name}")
+
+    subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+
+    subscriber.delete_subscription(request={"subscription": subscription_path})
+
+    print(f"Subscription {subscription_name} deleted")
 
 else:
     print(parser.format_help())

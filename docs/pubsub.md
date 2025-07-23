@@ -37,6 +37,11 @@ python pubsub.py --subscribe mytopic subscription-name
 python pubsub.py --subscribe mytopic subscription-name --ordered
 ```
 
+**Delete a subscription:**
+```bash
+python pubsub.py --delete-subscription subscription-name
+```
+
 > **Note**: Message ordering ensures that messages with the same ordering key are delivered in the order they were published. This is useful for scenarios where message sequence matters (e.g., user actions, financial transactions).
 
 ### Message Publishing
@@ -94,6 +99,7 @@ python pubsub.py --listen subscription-name 120
 | `--list-topics` | List all topics in the project | `python pubsub.py --list-topics` |
 | `--create-topic <name>` | Create a new topic | `python pubsub.py --create-topic mytopic` |
 | `--subscribe <topic> <subscription> [--ordered]` | Create a subscription to a topic (with optional message ordering) | `python pubsub.py --subscribe mytopic mysub --ordered` |
+| `--delete-subscription <name>` | Delete a subscription | `python pubsub.py --delete-subscription mysub` |
 | `--publish <topic> <message> [--ordering-key <key>]` | Publish a message to a topic (with optional ordering key) | `python pubsub.py --publish mytopic "Hello" --ordering-key user-123` |
 | `--receive <subscription> [count]` | Receive pending messages (optional count) | `python pubsub.py --receive mysub 5` |
 | `--listen <subscription> [timeout]` | Listen for new messages (optional timeout in seconds) | `python pubsub.py --listen mysub 60` |
