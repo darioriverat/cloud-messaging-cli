@@ -42,12 +42,29 @@ python cloud-storage.py --upload-file my-bucket-name /path/to/file.txt
 python cloud-storage.py --upload-file my-bucket-name ./file.txt
 ```
 
+**Download a file from a bucket (preserves original path):**
+```bash
+python cloud-storage.py --download-file my-bucket-name /path/to/file.txt
+```
+
+**Download a file to a specific destination:**
+```bash
+python cloud-storage.py --download-file my-bucket-name /path/to/file.txt ./downloaded-file.txt
+```
+
+**Download a file to a different directory:**
+```bash
+python cloud-storage.py --download-file my-bucket-name file.txt /home/user/downloads/new-file.txt
+```
+
 > **Important Note**: When uploading files, GCP will create the underlying "path" structure in Cloud Storage based on the file path you provide. For example:
 > - If you upload `~/hello.txt`, GCP will store it as `/Users/youruser/hello.txt`
 > - If you upload `./file.txt`, GCP will store it as `./file.txt` using `./` as the folder name.
 > - If you upload `/absolute/path/file.txt`, GCP will store it as `/absolute/path/file.txt`
 >
 > Consider using simple filenames or organizing your uploads with specific paths to avoid unexpected storage structures.
+>
+> **Download Note**: When downloading files, if no destination path is specified, the file will be downloaded with the same path structure as stored in Cloud Storage. Use the optional third parameter to specify a custom destination path.
 
 ## Command Reference
 
@@ -56,6 +73,7 @@ python cloud-storage.py --upload-file my-bucket-name ./file.txt
 | `--create-bucket <name>` | Create a new bucket | `python cloud-storage.py --create-bucket my-bucket` |
 | `--list-buckets` | List all buckets in the project | `python cloud-storage.py --list-buckets` |
 | `--upload-file <bucket> <file>` | Upload a file to a bucket | `python cloud-storage.py --upload-file my-bucket file.txt` |
+| `--download-file <bucket> <file> [dest]` | Download a file from a bucket (optional destination) | `python cloud-storage.py --download-file my-bucket file.txt ./local-file.txt` |
 | `--region <region>` | Specify the region for bucket creation | `python cloud-storage.py --create-bucket my-bucket --region us-central1` |
 
 ## Common GCP Regions
