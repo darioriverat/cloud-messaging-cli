@@ -30,6 +30,16 @@ python cloud-storage.py --create-bucket my-bucket-name --region us-central1
 python cloud-storage.py --list-buckets
 ```
 
+**Delete a bucket:**
+```bash
+python cloud-storage.py --delete-bucket my-bucket-name
+```
+
+**Force delete a bucket (delete all objects first):**
+```bash
+python cloud-storage.py --delete-bucket my-bucket-name --force
+```
+
 ### File Operations
 
 **Upload a file to a bucket:**
@@ -77,6 +87,10 @@ python cloud-storage.py --delete-file my-bucket-name ./file.txt
 > **Download Note**: When downloading files, if no destination path is specified, the file will be downloaded with the same path structure as stored in Cloud Storage. Use the optional third parameter to specify a custom destination path.
 >
 > **Delete Note**: When deleting files, make sure to specify the exact path as stored in Cloud Storage. The deletion is permanent and cannot be undone.
+>
+> **Bucket Deletion Warning**: Deleting a bucket will permanently remove all files and data within it. This action cannot be undone. Make sure the bucket is empty or you have backed up any important data before deletion.
+>
+> **Force Delete Warning**: Using `--force` will permanently delete ALL objects in the bucket before deleting the bucket itself. This is irreversible and will remove all files, folders, and data within the bucket.
 
 ## Command Reference
 
@@ -87,6 +101,8 @@ python cloud-storage.py --delete-file my-bucket-name ./file.txt
 | `--upload-file <bucket> <file>` | Upload a file to a bucket | `python cloud-storage.py --upload-file my-bucket file.txt` |
 | `--download-file <bucket> <file> [dest]` | Download a file from a bucket (optional destination) | `python cloud-storage.py --download-file my-bucket file.txt ./local-file.txt` |
 | `--delete-file <bucket> <file>` | Delete a file from a bucket | `python cloud-storage.py --delete-file my-bucket file.txt` |
+| `--delete-bucket <name> [--force]` | Delete a bucket (use --force for non-empty buckets) | `python cloud-storage.py --delete-bucket my-bucket --force` |
+| `--force` | Force delete bucket (delete all objects first) | `python cloud-storage.py --delete-bucket my-bucket --force` |
 | `--region <region>` | Specify the region for bucket creation | `python cloud-storage.py --create-bucket my-bucket --region us-central1` |
 
 ## Common GCP Regions

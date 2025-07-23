@@ -15,6 +15,8 @@ parser.add_argument('--region', type=str, help='Region for the bucket (e.g., us-
 parser.add_argument('--upload-file', nargs=2, metavar=('BUCKET_NAME', 'FILE_PATH'), help='Upload a file to a bucket')
 parser.add_argument('--download-file', nargs='+', metavar='ARG', help='Download a file from a bucket: <bucket_name> <file_path> [destination_path]')
 parser.add_argument('--delete-file', nargs=2, metavar=('BUCKET_NAME', 'FILE_PATH'), help='Delete a file from a bucket')
+parser.add_argument('--delete-bucket', type=str, help='Name of the bucket to delete')
+parser.add_argument('--force', action='store_true', help='Force delete bucket (delete all objects first)')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
@@ -125,6 +127,36 @@ elif args.delete_file:
     blob.delete()
 
     print(f"File {file_path} deleted from bucket {bucket_name}")
+
+# check for arg delete_bucket
+elif args.delete_bucket:
+    bucket_name = args.delete_bucket
+    force = args.force
+
+    print(f"Deleting bucket: {bucket_name}")
+    if force:
+        print("Force mode enabled - will delete all objects first")
+
+    storage_client = storage.Client.from_service_account_json(service_account_file)
+
+    bucket = storage_client.bucket(bucket_name)
+
+    if force:
+        # Delete all objects in the bucket first
+        blobs = list(bucket.list_blobs())
+        if blobs:
+            print(f"Found {len(blobs)} object(s) in bucket. Deleting all objects...")
+            for blob in blobs:
+                blob.delete()
+                print(f"Deleted object: {blob.name}")
+            print("All objects deleted.")
+        else:
+            print("Bucket is empty.")
+
+    # Delete the bucket
+    bucket.delete()
+
+    print(f"Bucket {bucket_name} deleted")
 
 else:
     print(parser.format_help())

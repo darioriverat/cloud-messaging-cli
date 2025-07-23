@@ -100,6 +100,12 @@ python cloud-storage.py --download-file my-bucket-name file.txt ./downloaded-fil
 
 # Delete a file from a bucket
 python cloud-storage.py --delete-file my-bucket-name file.txt
+
+# Delete a bucket (⚠️ permanent)
+python cloud-storage.py --delete-bucket my-bucket-name
+
+# Force delete bucket with all contents (⚠️ permanent)
+python cloud-storage.py --delete-bucket my-bucket-name --force
 ```
 
 📖 **[Full Cloud Storage Documentation](docs/cloud-storage.md)**
