@@ -10,7 +10,6 @@ load_dotenv()
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Argument parser for pubsub.')
 parser.add_argument('--create-topic', type=str, help='Name of the topic to create')
-parser.add_argument('--enable-ordering', action='store_true', help='Enable message ordering for topic (use with --create-topic)')
 parser.add_argument('--list-topics', action='store_true', help='List all topics in the project')
 parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
 parser.add_argument('--ordered', action='store_true', help='Enable message ordering for subscription (use with --subscribe)')
