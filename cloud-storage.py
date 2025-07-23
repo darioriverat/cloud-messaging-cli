@@ -14,6 +14,7 @@ parser.add_argument('--list-buckets', action='store_true', help='List all bucket
 parser.add_argument('--region', type=str, help='Region for the bucket (e.g., us-central1, europe-west1)')
 parser.add_argument('--upload-file', nargs=2, metavar=('BUCKET_NAME', 'FILE_PATH'), help='Upload a file to a bucket')
 parser.add_argument('--download-file', nargs='+', metavar='ARG', help='Download a file from a bucket: <bucket_name> <file_path> [destination_path]')
+parser.add_argument('--delete-file', nargs=2, metavar=('BUCKET_NAME', 'FILE_PATH'), help='Delete a file from a bucket')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
@@ -110,6 +111,20 @@ elif args.download_file:
     blob.download_to_filename(destination_path)
 
     print(f"File downloaded to: {destination_path}")
+
+# check for arg delete_file
+elif args.delete_file:
+    bucket_name, file_path = args.delete_file
+
+    print(f"Deleting file: {file_path} from bucket: {bucket_name}")
+
+    storage_client = storage.Client.from_service_account_json(service_account_file)
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(file_path)
+    blob.delete()
+
+    print(f"File {file_path} deleted from bucket {bucket_name}")
 
 else:
     print(parser.format_help())

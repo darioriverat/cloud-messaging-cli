@@ -97,6 +97,9 @@ python cloud-storage.py --download-file my-bucket-name file.txt
 
 # Download a file to a specific destination
 python cloud-storage.py --download-file my-bucket-name file.txt ./downloaded-file.txt
+
+# Delete a file from a bucket
+python cloud-storage.py --delete-file my-bucket-name file.txt
 ```
 
 📖 **[Full Cloud Storage Documentation](docs/cloud-storage.md)**
