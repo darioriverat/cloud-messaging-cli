@@ -116,11 +116,24 @@ python cloud-storage.py --delete-bucket my-bucket-name --force
 
 📖 **[Full Cloud Storage Documentation](docs/cloud-storage.md)**
 
+### [BigQuery CLI](docs/bigquery.md)
+
+Manage Google BigQuery datasets and tables.
+
+**Quick Start:**
+```bash
+# Create a dataset
+python bigquery.py --create-dataset my-dataset-name
+```
+
+📖 **[Full BigQuery Documentation](docs/bigquery.md)**
+
 ## Features
 
 - **Pub/Sub Management**: Create topics, subscriptions, publish and receive messages
 - **Message Ordering**: Support for ordered message delivery with ordering keys
 - **Cloud Storage**: Create buckets with region specification
+- **BigQuery**: Create datasets and manage data warehouse resources
 - **Simple CLI Interface**: Easy-to-use command-line tools
 - **Comprehensive Documentation**: Detailed guides for each service
 
