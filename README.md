@@ -128,8 +128,11 @@ python bigquery.py --create-dataset my-dataset-name
 # Create a table in a dataset
 python bigquery.py --create-table my-dataset-name my-table-name
 
+# Create a table with schema
+python bigquery.py --create-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
+
 # Update a table's schema
-python bigquery.py --update-table my-dataset-name my-table-name --json-schema schema.json
+python bigquery.py --update-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
 ```
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**

@@ -27,6 +27,11 @@ python bigquery.py --create-dataset my-dataset-name
 python bigquery.py --create-table my-dataset-name my-table-name
 ```
 
+**Create a table with schema:**
+```bash
+python bigquery.py --create-table my-dataset-name my-table-name --json-schema schema.json
+```
+
 **Update a table's schema:**
 ```bash
 python bigquery.py --update-table my-dataset-name my-table-name --json-schema schema.json
@@ -70,9 +75,9 @@ The JSON schema file should contain the complete table schema in the following f
 | Command | Description | Example |
 |---------|-------------|---------|
 | `--create-dataset <name>` | Create a new dataset | `python bigquery.py --create-dataset my-dataset` |
-| `--create-table <dataset> <table>` | Create a new table in a dataset | `python bigquery.py --create-table my-dataset my-table` |
-| `--update-table <dataset> <table>` | Update a table's schema | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
-| `--json-schema <file>` | JSON schema file for table creation/update | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
+| `--create-table <dataset> <table> [--json-schema <file>]` | Create a new table in a dataset (optional schema) | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
+| `--update-table <dataset> <table> --json-schema <file>` | Update a table's schema | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
+| `--json-schema <file>` | JSON schema file for table creation/update | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
 
 ## Common BigQuery Locations
 

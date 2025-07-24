@@ -48,6 +48,9 @@ python bigquery.py --create-table my-dataset users --json-schema examples/bigque
 # Create a table with the complex nested schema
 python bigquery.py --create-table my-dataset employees --json-schema examples/bigquery/complex_schema_example.json
 
+# Create a table without schema (empty table)
+python bigquery.py --create-table my-dataset empty-table
+
 # Update an existing table with the complex schema
 python bigquery.py --update-table my-dataset employees --json-schema examples/bigquery/complex_schema_example.json
 ```

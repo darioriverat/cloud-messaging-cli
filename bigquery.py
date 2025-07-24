@@ -62,13 +62,35 @@ if args.create_dataset:
 elif args.create_table:
     dataset_name, table_name = args.create_table
 
+    if json_schema:
+        print(f"Using json schema: {json_schema}")
+        with open(json_schema, 'r') as file:
+            json_schema_file = file.read()
+
+        # validate json_schema is a valid json
+        try:
+            json_schema_object = json.loads(json_schema_file)
+        except json.JSONDecodeError:
+            print("Error: --json-schema is not a valid json")
+            exit(1)
+
+        # Create schema fields using the recursive function
+        schema_fields = []
+        for field in json_schema_object['schema_fields']:
+            schema_fields.append(create_schema_field(field))
+
     print(f"Creating table: {table_name} in dataset: {dataset_name}")
 
     bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
 
     table_id = f"{project_id}.{dataset_name}.{table_name}"
 
-    table = bigquery.Table(table_id)
+    if (json_schema):
+        table = bigquery.Table(table_id, schema_fields)
+        table.schema = schema_fields
+    else:
+        table = bigquery.Table(table_id)
+
     table = bigquery_client.create_table(table)
 
     print(f"Table {table_name} created in dataset {dataset_name}")
