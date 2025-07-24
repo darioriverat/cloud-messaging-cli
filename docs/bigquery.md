@@ -37,6 +37,13 @@ python bigquery.py --create-table my-dataset-name my-table-name --json-schema sc
 python bigquery.py --update-table my-dataset-name my-table-name --json-schema schema.json
 ```
 
+**Delete a table:**
+```bash
+python bigquery.py --delete-table my-dataset-name my-table-name
+```
+
+> **Important Note**: Deleting a table will permanently remove it and all its data. This action cannot be undone. Make sure you have backed up any important data before deletion.
+
 ## JSON Schema Format
 
 The JSON schema file should contain the complete table schema in the following format:
@@ -77,6 +84,7 @@ The JSON schema file should contain the complete table schema in the following f
 | `--create-dataset <name>` | Create a new dataset | `python bigquery.py --create-dataset my-dataset` |
 | `--create-table <dataset> <table> [--json-schema <file>]` | Create a new table in a dataset (optional schema) | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
 | `--update-table <dataset> <table> --json-schema <file>` | Update a table's schema | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
+| `--delete-table <dataset> <table>` | Delete a table | `python bigquery.py --delete-table my-dataset my-table` |
 | `--json-schema <file>` | JSON schema file for table creation/update | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
 
 ## Common BigQuery Locations

@@ -53,6 +53,9 @@ python bigquery.py --create-table my-dataset empty-table
 
 # Update an existing table with the complex schema
 python bigquery.py --update-table my-dataset employees --json-schema examples/bigquery/complex_schema_example.json
+
+# Delete a table (⚠️ permanent)
+python bigquery.py --delete-table my-dataset employees
 ```
 
 ### Schema Structure

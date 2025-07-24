@@ -133,6 +133,9 @@ python bigquery.py --create-table my-dataset-name my-table-name --json-schema ex
 
 # Update a table's schema
 python bigquery.py --update-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
+
+# Delete a table (⚠️ permanent)
+python bigquery.py --delete-table my-dataset-name my-table-name
 ```
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**

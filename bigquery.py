@@ -33,6 +33,7 @@ def create_schema_field(field_data):
 parser = argparse.ArgumentParser(description='Argument parser for big query.')
 parser.add_argument('--create-dataset', type=str, help='Name of the dataset to create')
 parser.add_argument('--create-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to create')
+parser.add_argument('--delete-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to delete')
 parser.add_argument('--update-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to update')
 parser.add_argument('--json-schema', type=str, help='JSON schema string for the table')
 
@@ -57,6 +58,19 @@ if args.create_dataset:
     bigquery_client.create_dataset(dataset)
 
     print(f"Dataset {dataset_name} created")
+
+# check for arg delete_table
+elif args.delete_table:
+    dataset_name, table_name = args.delete_table
+
+    print(f"Deleting table: {table_name} in dataset: {dataset_name}")
+
+    bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
+
+    table_id = f"{project_id}.{dataset_name}.{table_name}"
+    bigquery_client.delete_table(table_id)
+
+    print(f"Table {table_name} deleted from dataset {dataset_name}")
 
 # check for arg create_table
 elif args.create_table:
