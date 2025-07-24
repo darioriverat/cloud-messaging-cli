@@ -54,6 +54,11 @@ python bigquery.py --update-table my-dataset-name my-table-name --json-schema sc
 python bigquery.py --delete-table my-dataset-name my-table-name
 ```
 
+**Load CSV data into a table:**
+```bash
+python bigquery.py --load-csv my-dataset-name my-table-name path/to/data.csv
+```
+
 > **Important Note**: Deleting a table will permanently remove it and all its data. This action cannot be undone. Make sure you have backed up any important data before deletion.
 
 ## JSON Schema Format
@@ -89,6 +94,37 @@ The JSON schema file should contain the complete table schema in the following f
 - `REQUIRED` - Field must have a value
 - `REPEATED` - Field can contain multiple values (array)
 
+## CSV Loading Considerations
+
+When loading CSV data into BigQuery tables, consider the following:
+
+### **File Format Requirements:**
+- **Encoding**: UTF-8 is recommended
+- **Delimiters**: Comma (default), semicolon, tab, or custom
+- **Headers**: Can be skipped using `--skip-rows`
+- **File Size**: Large files are automatically handled by BigQuery
+
+### **Data Type Considerations:**
+- **Auto-detection**: BigQuery will attempt to auto-detect data types
+- **Schema Mismatch**: If table has a defined schema, data must match it
+- **Date/Time**: Use standard formats (YYYY-MM-DD, YYYY-MM-DD HH:MM:SS)
+- **Numbers**: Use standard decimal notation (no currency symbols)
+
+### **Performance Tips:**
+- **Large Files**: BigQuery handles large files efficiently
+- **Parallel Loading**: Multiple files can be loaded simultaneously
+- **Error Handling**: Check job status for any loading errors
+
+### **Common Use Cases:**
+```bash
+# Load standard CSV
+python bigquery.py --load-csv my-dataset my-table data.csv
+
+# Load into table with defined schema
+python bigquery.py --create-table my-dataset my-table --json-schema schema.json
+python bigquery.py --load-csv my-dataset my-table data.csv
+```
+
 ## Command Reference
 
 | Command | Description | Example |
@@ -98,6 +134,7 @@ The JSON schema file should contain the complete table schema in the following f
 | `--create-table <dataset> <table> [--json-schema <file>]` | Create a new table in a dataset (optional schema) | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
 | `--update-table <dataset> <table> --json-schema <file>` | Update a table's schema | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
 | `--delete-table <dataset> <table>` | Delete a table | `python bigquery.py --delete-table my-dataset my-table` |
+| `--load-csv <dataset> <table> <file>` | Load CSV data into a table | `python bigquery.py --load-csv my-dataset my-table data.csv` |
 | `--json-schema <file>` | JSON schema file for table creation/update | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
 | `--force` | Force deletion (deletes all contained objects first) | `python bigquery.py --delete-dataset my-dataset --force` |
 

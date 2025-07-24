@@ -68,7 +68,10 @@ python bigquery.py --update-table my-dataset employees --json-schema examples/bi
 
 # Delete a table (⚠️ permanent)
 python bigquery.py --delete-table my-dataset employees
-```
+
+# Load CSV data into a table
+python bigquery.py --load-csv my-dataset employees data/employees.csv
+
 
 ### Schema Structure
 

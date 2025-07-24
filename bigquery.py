@@ -36,6 +36,9 @@ parser.add_argument('--delete-dataset', type=str, help='Name of the dataset to d
 parser.add_argument('--create-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to create')
 parser.add_argument('--delete-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to delete')
 parser.add_argument('--update-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to update')
+parser.add_argument('--load-csv', nargs=3, metavar=('DATASET_NAME', 'TABLE_NAME', 'CSV_FILE_PATH'), help='Name of the table to load from a csv file')
+
+# optional arguments
 parser.add_argument('--json-schema', type=str, help='JSON schema string for the table')
 parser.add_argument('--force', action='store_true', help='Force the operation to run without confirmation')
 
@@ -169,5 +172,27 @@ elif args.update_table:
     bigquery_client.update_table(table, ["schema"])
 
     print(f"Table {table_name} updated in dataset {dataset_name}")
+
+# check for arg load_csv
+elif args.load_csv:
+    dataset_name, table_name, csv_file_path = args.load_csv
+
+    print(f"Loading csv file: {csv_file_path} into table: {table_name} in dataset: {dataset_name}")
+
+    bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
+
+    table_id = f"{project_id}.{dataset_name}.{table_name}"
+
+    job_config = bigquery.LoadJobConfig(
+        source_format=bigquery.SourceFormat.CSV,
+    )
+
+    with open(csv_file_path, 'rb') as source_file:
+        job = bigquery_client.load_table_from_file(source_file, table_id, job_config=job_config)
+
+    job.result()
+
+    print(f"CSV file {csv_file_path} loaded into table {table_name} in dataset {dataset_name}")
+
 else:
     print(parser.format_help())

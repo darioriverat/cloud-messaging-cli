@@ -142,6 +142,12 @@ python bigquery.py --update-table my-dataset-name my-table-name --json-schema ex
 
 # Delete a table (⚠️ permanent)
 python bigquery.py --delete-table my-dataset-name my-table-name
+
+# Load CSV data into a table
+python bigquery.py --load-csv my-dataset-name my-table-name data.csv
+
+# Load CSV with custom delimiter
+python bigquery.py --load-csv my-dataset-name my-table-name data.csv --delimiter ";"
 ```
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**
