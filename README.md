@@ -1,13 +1,13 @@
-# GCP Assistant
+# GCP CLI Toolkit
 
-A command-line tool for managing Google Cloud Platform services including Google Cloud Pub/Sub and Cloud Storage.
+A comprehensive command-line toolkit for managing Google Cloud Platform services including Google Cloud Pub/Sub, BigQuery, Cloud Storage, and more.
 
 ## Installation
 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd gcp_assistant
+cd gcp-cli-toolkit
 ```
 
 2. Create and activate a virtual environment:
@@ -138,14 +138,16 @@ python bigquery.py --update-table my-dataset-name my-table-name --json-schema sc
 
 - **Pub/Sub Management**: Create topics, subscriptions, publish and receive messages
 - **Message Ordering**: Support for ordered message delivery with ordering keys
-- **Cloud Storage**: Create buckets with region specification
-- **BigQuery**: Create datasets and manage data warehouse resources
+- **Cloud Storage**: Create buckets with region specification, upload/download files
+- **BigQuery**: Create datasets and tables with complex nested schemas
 - **Simple CLI Interface**: Easy-to-use command-line tools
 - **Comprehensive Documentation**: Detailed guides for each service
+- **Extensible Architecture**: Easy to add new GCP services
 
 ## Notes
 
 - All tools require proper GCP service account configuration
 - Make sure your service account has the necessary permissions for the services you want to use
-- Currently supports Google Cloud Pub/Sub and Cloud Storage
-- Plans to support AWS SNS/SQS, Azure Service Bus, and other cloud messaging platforms
+- Currently supports Google Cloud Pub/Sub, Cloud Storage, and BigQuery
+- Extensible architecture allows easy addition of new GCP services
+- Comprehensive examples and documentation for each service

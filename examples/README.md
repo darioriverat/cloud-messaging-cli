@@ -1,6 +1,6 @@
-# GCP Assistant Examples
+# GCP CLI Toolkit Examples
 
-This folder contains example files for use with the GCP Assistant CLI tools, organized by service.
+This folder contains example files for use with the GCP CLI Toolkit, organized by service.
 
 ## Available Examples
 

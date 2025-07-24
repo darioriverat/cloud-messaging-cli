@@ -1,6 +1,6 @@
 # Google Cloud Pub/Sub CLI
 
-A command-line tool for managing Google Cloud Pub/Sub topics, subscriptions, and messages.
+A command-line tool for managing Google Cloud Pub/Sub topics, subscriptions, and messages as part of the GCP CLI Toolkit.
 
 ## Configuration
 

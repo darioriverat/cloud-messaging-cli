@@ -1,6 +1,6 @@
 # BigQuery Schema Examples
 
-This folder contains BigQuery-specific example files for use with the BigQuery CLI tools.
+This folder contains BigQuery-specific example files for use with the GCP CLI Toolkit.
 
 ## Schema Examples
 

@@ -1,6 +1,6 @@
 # Google BigQuery CLI
 
-A command-line tool for managing Google BigQuery datasets and tables.
+A command-line tool for managing Google BigQuery datasets and tables as part of the GCP CLI Toolkit.
 
 ## Configuration
 

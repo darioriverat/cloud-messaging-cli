@@ -1,6 +1,6 @@
 # Google Cloud Storage CLI
 
-A command-line tool for managing Google Cloud Storage buckets.
+A command-line tool for managing Google Cloud Storage buckets and files as part of the GCP CLI Toolkit.
 
 ## Configuration
 
