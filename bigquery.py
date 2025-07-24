@@ -7,6 +7,28 @@ import json
 os.environ.clear()
 load_dotenv()
 
+def create_schema_field(field_data):
+    """Recursively create SchemaField objects, handling nested RECORD fields."""
+    if field_data['field_type'] == 'RECORD' and 'fields' in field_data:
+        # Handle nested RECORD fields
+        nested_fields = []
+        for nested_field in field_data['fields']:
+            nested_fields.append(create_schema_field(nested_field))
+
+        return bigquery.SchemaField(
+            field_data['name'],
+            field_data['field_type'],
+            mode=field_data.get('mode', 'NULLABLE'),
+            fields=nested_fields
+        )
+    else:
+        # Handle simple fields
+        return bigquery.SchemaField(
+            field_data['name'],
+            field_data['field_type'],
+            mode=field_data.get('mode', 'NULLABLE')
+        )
+
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Argument parser for big query.')
 parser.add_argument('--create-dataset', type=str, help='Name of the dataset to create')
@@ -71,14 +93,15 @@ elif args.update_table:
 
     # validate json_schema is a valid json
     try:
-        json_schema_object =json.loads(json_schema_file)
+        json_schema_object = json.loads(json_schema_file)
     except json.JSONDecodeError:
         print("Error: --json-schema is not a valid json")
         exit(1)
 
+    # Create schema fields using the recursive function
     schema_fields = []
     for field in json_schema_object['schema_fields']:
-        schema_fields.append(bigquery.SchemaField(field['name'], field['field_type'], mode=field['mode']))
+        schema_fields.append(create_schema_field(field))
 
     # create a Table object from the json_schema
     table = bigquery.Table(table, schema_fields)

@@ -1,0 +1,101 @@
+{
+  "schema_fields": [
+    {
+      "name": "user_id",
+      "field_type": "STRING",
+      "mode": "REQUIRED"
+    },
+    {
+      "name": "email",
+      "field_type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "age",
+      "field_type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "score",
+      "field_type": "FLOAT",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "is_active",
+      "field_type": "BOOLEAN",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "created_at",
+      "field_type": "TIMESTAMP",
+      "mode": "REQUIRED"
+    },
+    {
+      "name": "birth_date",
+      "field_type": "DATE",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "last_login",
+      "field_type": "DATETIME",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "balance",
+      "field_type": "NUMERIC",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "precise_balance",
+      "field_type": "BIGNUMERIC",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "profile_image",
+      "field_type": "BYTES",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "tags",
+      "field_type": "STRING",
+      "mode": "REPEATED"
+    },
+    {
+      "name": "scores",
+      "field_type": "INTEGER",
+      "mode": "REPEATED"
+    },
+    {
+      "name": "address",
+      "field_type": "RECORD",
+      "mode": "NULLABLE",
+      "fields": [
+        {
+          "name": "street",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "city",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "state",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "zip_code",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        }
+      ]
+    },
+    {
+      "name": "location",
+      "field_type": "GEOGRAPHY",
+      "mode": "NULLABLE"
+    }
+  ]
+}

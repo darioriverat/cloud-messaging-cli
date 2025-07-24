@@ -1,0 +1,273 @@
+{
+  "schema_fields": [
+    {
+      "name": "user_id",
+      "field_type": "STRING",
+      "mode": "REQUIRED"
+    },
+    {
+      "name": "personal_info",
+      "field_type": "RECORD",
+      "mode": "NULLABLE",
+      "fields": [
+        {
+          "name": "first_name",
+          "field_type": "STRING",
+          "mode": "REQUIRED"
+        },
+        {
+          "name": "last_name",
+          "field_type": "STRING",
+          "mode": "REQUIRED"
+        },
+        {
+          "name": "contact",
+          "field_type": "RECORD",
+          "mode": "NULLABLE",
+          "fields": [
+            {
+              "name": "email",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "phone",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "emergency_contact",
+              "field_type": "RECORD",
+              "mode": "NULLABLE",
+              "fields": [
+                {
+                  "name": "name",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "phone",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "relationship",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "address",
+          "field_type": "RECORD",
+          "mode": "NULLABLE",
+          "fields": [
+            {
+              "name": "street",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "city",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "state",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "zip_code",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "country",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "employment",
+      "field_type": "RECORD",
+      "mode": "NULLABLE",
+      "fields": [
+        {
+          "name": "company",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "position",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "department",
+          "field_type": "RECORD",
+          "mode": "NULLABLE",
+          "fields": [
+            {
+              "name": "name",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "code",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "manager",
+              "field_type": "RECORD",
+              "mode": "NULLABLE",
+              "fields": [
+                {
+                  "name": "manager_id",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "manager_name",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "manager_level",
+                  "field_type": "INTEGER",
+                  "mode": "NULLABLE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "salary_info",
+          "field_type": "RECORD",
+          "mode": "NULLABLE",
+          "fields": [
+            {
+              "name": "base_salary",
+              "field_type": "NUMERIC",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "bonus",
+              "field_type": "NUMERIC",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "currency",
+              "field_type": "STRING",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "benefits",
+              "field_type": "RECORD",
+              "mode": "NULLABLE",
+              "fields": [
+                {
+                  "name": "health_insurance",
+                  "field_type": "BOOLEAN",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "dental_insurance",
+                  "field_type": "BOOLEAN",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "retirement_plan",
+                  "field_type": "BOOLEAN",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "vacation_days",
+                  "field_type": "INTEGER",
+                  "mode": "NULLABLE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "preferences",
+      "field_type": "RECORD",
+      "mode": "NULLABLE",
+      "fields": [
+        {
+          "name": "language",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "timezone",
+          "field_type": "STRING",
+          "mode": "NULLABLE"
+        },
+        {
+          "name": "notifications",
+          "field_type": "RECORD",
+          "mode": "NULLABLE",
+          "fields": [
+            {
+              "name": "email_notifications",
+              "field_type": "BOOLEAN",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "sms_notifications",
+              "field_type": "BOOLEAN",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "push_notifications",
+              "field_type": "BOOLEAN",
+              "mode": "NULLABLE"
+            },
+            {
+              "name": "notification_schedule",
+              "field_type": "RECORD",
+              "mode": "NULLABLE",
+              "fields": [
+                {
+                  "name": "start_time",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "end_time",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                },
+                {
+                  "name": "timezone",
+                  "field_type": "STRING",
+                  "mode": "NULLABLE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "created_at",
+      "field_type": "TIMESTAMP",
+      "mode": "REQUIRED"
+    },
+    {
+      "name": "updated_at",
+      "field_type": "TIMESTAMP",
+      "mode": "NULLABLE"
+    }
+  ]
+}

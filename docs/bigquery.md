@@ -53,6 +53,8 @@ The JSON schema file should contain the complete table schema in the following f
 }
 ```
 
+> **Example**: See `examples/schema_example.json` for a comprehensive example that demonstrates all supported field types and modes, including nested RECORD structures.
+
 ### Supported Field Types:
 - `STRING`, `INTEGER`, `FLOAT`, `BOOLEAN`, `TIMESTAMP`, `DATE`, `DATETIME`, `NUMERIC`, `BIGNUMERIC`, `BYTES`, `RECORD`, `GEOGRAPHY`
 

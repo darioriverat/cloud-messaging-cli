@@ -1,0 +1,19 @@
+{
+    "schema_fields": [
+        {
+            "name": "name",
+            "field_type": "STRING",
+            "mode": "REQUIRED"
+        },
+        {
+            "name": "email",
+            "field_type": "STRING",
+            "mode": "NULLABLE"
+        },
+        {
+            "name": "age",
+            "field_type": "INTEGER",
+            "mode": "NULLABLE"
+        }
+    ]
+}
