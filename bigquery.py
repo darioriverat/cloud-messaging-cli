@@ -32,10 +32,12 @@ def create_schema_field(field_data):
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Argument parser for big query.')
 parser.add_argument('--create-dataset', type=str, help='Name of the dataset to create')
+parser.add_argument('--delete-dataset', type=str, help='Name of the dataset to delete')
 parser.add_argument('--create-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to create')
 parser.add_argument('--delete-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to delete')
 parser.add_argument('--update-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to update')
 parser.add_argument('--json-schema', type=str, help='JSON schema string for the table')
+parser.add_argument('--force', action='store_true', help='Force the operation to run without confirmation')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
@@ -58,6 +60,23 @@ if args.create_dataset:
     bigquery_client.create_dataset(dataset)
 
     print(f"Dataset {dataset_name} created")
+
+# check for arg delete_dataset
+elif args.delete_dataset:
+    dataset_name = args.delete_dataset
+
+    print(f"Deleting dataset: {dataset_name}")
+
+    bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
+
+    dataset_id = f"{project_id}.{dataset_name}"
+
+    if args.force:
+        bigquery_client.delete_dataset(dataset_id, delete_contents=True)
+    else:
+        bigquery_client.delete_dataset(dataset_id)
+
+    print(f"Dataset {dataset_name} deleted")
 
 # check for arg delete_table
 elif args.delete_table:

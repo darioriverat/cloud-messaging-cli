@@ -42,6 +42,18 @@ A complex example demonstrating multiple nested RECORD fields at different level
 ### Usage
 
 ```bash
+# Create a dataset
+python bigquery.py --create-dataset my-dataset
+
+# Delete a dataset (⚠️ permanent)
+python bigquery.py --delete-dataset my-dataset
+
+# Delete a dataset with force (deletes all tables first)
+python bigquery.py --delete-dataset my-dataset --force
+
+# Create a table in the dataset
+python bigquery.py --create-table my-dataset employees
+
 # Create a table with the basic example schema
 python bigquery.py --create-table my-dataset users --json-schema examples/bigquery/schema_example.json
 

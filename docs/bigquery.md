@@ -20,6 +20,18 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 python bigquery.py --create-dataset my-dataset-name
 ```
 
+**Delete a dataset:**
+```bash
+python bigquery.py --delete-dataset my-dataset-name
+```
+
+**Delete a dataset with force (deletes all tables first):**
+```bash
+python bigquery.py --delete-dataset my-dataset-name --force
+```
+
+> **Important Note**: Deleting a dataset will permanently remove it and all its tables and data. This action cannot be undone. The `--force` option will delete all tables in the dataset before deleting the dataset itself.
+
 ### Table Management
 
 **Create a table in a dataset:**
@@ -82,10 +94,12 @@ The JSON schema file should contain the complete table schema in the following f
 | Command | Description | Example |
 |---------|-------------|---------|
 | `--create-dataset <name>` | Create a new dataset | `python bigquery.py --create-dataset my-dataset` |
+| `--delete-dataset <name> [--force]` | Delete a dataset (--force deletes all tables first) | `python bigquery.py --delete-dataset my-dataset --force` |
 | `--create-table <dataset> <table> [--json-schema <file>]` | Create a new table in a dataset (optional schema) | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
 | `--update-table <dataset> <table> --json-schema <file>` | Update a table's schema | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
 | `--delete-table <dataset> <table>` | Delete a table | `python bigquery.py --delete-table my-dataset my-table` |
 | `--json-schema <file>` | JSON schema file for table creation/update | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
+| `--force` | Force deletion (deletes all contained objects first) | `python bigquery.py --delete-dataset my-dataset --force` |
 
 ## Common BigQuery Locations
 

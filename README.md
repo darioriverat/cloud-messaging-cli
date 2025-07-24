@@ -125,6 +125,12 @@ Manage Google BigQuery datasets and tables.
 # Create a dataset
 python bigquery.py --create-dataset my-dataset-name
 
+# Delete a dataset (⚠️ permanent)
+python bigquery.py --delete-dataset my-dataset-name
+
+# Delete a dataset with force (deletes all tables first)
+python bigquery.py --delete-dataset my-dataset-name --force
+
 # Create a table in a dataset
 python bigquery.py --create-table my-dataset-name my-table-name
 
