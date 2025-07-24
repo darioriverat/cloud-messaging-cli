@@ -2,6 +2,7 @@ import os
 from google.cloud import bigquery
 from dotenv import load_dotenv
 import argparse
+import json
 
 os.environ.clear()
 load_dotenv()
@@ -10,11 +11,16 @@ load_dotenv()
 parser = argparse.ArgumentParser(description='Argument parser for big query.')
 parser.add_argument('--create-dataset', type=str, help='Name of the dataset to create')
 parser.add_argument('--create-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to create')
+parser.add_argument('--update-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to update')
+parser.add_argument('--json-schema', type=str, help='JSON schema string for the table')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
 
 args = parser.parse_args()
+
+# check for arg json_schema
+json_schema = args.json_schema
 
 # check for arg create_dataset
 if args.create_dataset:
@@ -45,5 +51,45 @@ elif args.create_table:
 
     print(f"Table {table_name} created in dataset {dataset_name}")
 
+# check for arg update_table
+elif args.update_table:
+    dataset_name, table_name = args.update_table
+
+    if (not json_schema):
+        print("Error: --json-schema is required for --update-table")
+        exit(1)
+
+    print(f"Updating table: {table_name} in dataset: {dataset_name}")
+
+    bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
+    data_set = bigquery_client.dataset(dataset_name)
+    table = data_set.table(table_name)
+
+    # get contents from json_schema
+    with open(json_schema, 'r') as file:
+        json_schema_file = file.read()
+
+    # validate json_schema is a valid json
+    try:
+        json_schema_object =json.loads(json_schema_file)
+    except json.JSONDecodeError:
+        print("Error: --json-schema is not a valid json")
+        exit(1)
+
+    schema_fields = []
+    for field in json_schema_object['schema_fields']:
+        schema_fields.append(bigquery.SchemaField(field['name'], field['field_type'], mode=field['mode']))
+
+    # create a Table object from the json_schema
+    table = bigquery.Table(table, schema_fields)
+    table.schema = schema_fields
+
+    # get field names from schema_fields
+    fields = [field.name for field in schema_fields]
+
+    # update the table
+    bigquery_client.update_table(table, ["schema"])
+
+    print(f"Table {table_name} updated in dataset {dataset_name}")
 else:
     print(parser.format_help())
