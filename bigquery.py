@@ -37,6 +37,8 @@ parser.add_argument('--create-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_N
 parser.add_argument('--delete-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to delete')
 parser.add_argument('--update-table', nargs=2, metavar=('DATASET_NAME', 'TABLE_NAME'), help='Name of the table to update')
 parser.add_argument('--load-csv', nargs=3, metavar=('DATASET_NAME', 'TABLE_NAME', 'CSV_FILE_PATH'), help='Name of the table to load from a csv file')
+parser.add_argument('--query', type=str, help='Execute SQL query directly from command line')
+parser.add_argument('--query-file', type=str, help='Execute SQL query from file')
 
 # optional arguments
 parser.add_argument('--json-schema', type=str, help='JSON schema string for the table')
@@ -193,6 +195,64 @@ elif args.load_csv:
     job.result()
 
     print(f"CSV file {csv_file_path} loaded into table {table_name} in dataset {dataset_name}")
+
+# check for arg query
+elif args.query:
+    query = args.query
+
+    print(f"Running query: {query}")
+
+    bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
+
+    try:
+        query_job = bigquery_client.query(query)
+        results = query_job.result()
+
+        print(f"Query executed successfully!")
+        print(f"Results:")
+
+        # Display results in a formatted way
+        for row in results:
+            print(row)
+
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        exit(1)
+
+# check for arg query_file
+elif args.query_file:
+    query_file = args.query_file
+
+    print(f"Running query from file: {query_file}")
+
+    bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
+
+    # Read query from file
+    try:
+        with open(query_file, 'r') as file:
+            query = file.read().strip()
+    except FileNotFoundError:
+        print(f"Error: Query file '{query_file}' not found")
+        exit(1)
+    except Exception as e:
+        print(f"Error reading query file: {e}")
+        exit(1)
+
+    # Execute the query
+    try:
+        query_job = bigquery_client.query(query)
+        results = query_job.result()
+
+        print(f"Query executed successfully!")
+        print(f"Results:")
+
+        # Display results in a formatted way
+        for row in results:
+            print(row)
+
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        exit(1)
 
 else:
     print(parser.format_help())

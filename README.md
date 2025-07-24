@@ -148,6 +148,12 @@ python bigquery.py --load-csv my-dataset-name my-table-name data.csv
 
 # Load CSV with custom delimiter
 python bigquery.py --load-csv my-dataset-name my-table-name data.csv --delimiter ";"
+
+# Execute a query from command line
+python bigquery.py --query "SELECT * FROM my-dataset-name.my-table-name LIMIT 10"
+
+# Execute a query from a file
+python bigquery.py --query-file query.sql
 ```
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**

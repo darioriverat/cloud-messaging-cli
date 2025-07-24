@@ -72,6 +72,15 @@ python bigquery.py --delete-table my-dataset employees
 # Load CSV data into a table
 python bigquery.py --load-csv my-dataset employees data/employees.csv
 
+# Execute a query from command line
+python bigquery.py --query "SELECT COUNT(*) FROM my-dataset.employees"
+
+# Execute a query from a file
+python bigquery.py --query-file queries/employee_count.sql
+
+# Execute a complex query from command line
+python bigquery.py --query "SELECT name, department FROM my-dataset.employees WHERE salary > 50000"
+
 
 ### Schema Structure
 
