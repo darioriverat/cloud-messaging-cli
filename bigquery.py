@@ -24,7 +24,7 @@ if args.create_dataset:
 
     bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
 
-    dataset_id = f"{bigquery_client.project}.{dataset_name}"
+    dataset_id = f"{project_id}.{dataset_name}"
     dataset = bigquery.Dataset(dataset_id)
     bigquery_client.create_dataset(dataset)
 
@@ -38,7 +38,7 @@ elif args.create_table:
 
     bigquery_client = bigquery.Client.from_service_account_json(service_account_file)
 
-    table_id = f"{bigquery_client.project}.{dataset_name}.{table_name}"
+    table_id = f"{project_id}.{dataset_name}.{table_name}"
 
     table = bigquery.Table(table_id)
     table = bigquery_client.create_table(table)
