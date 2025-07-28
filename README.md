@@ -158,12 +158,25 @@ python bigquery.py --query-file query.sql
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**
 
+### [Artifact Registry CLI](docs/artifacts.md)
+
+Manage Google Artifact Registry repositories.
+
+**Quick Start:**
+```bash
+# Create a Docker repository
+./artifacts.sh create-docker-repository my-repo --location us-central1
+```
+
+📖 **[Full Artifact Registry Documentation](docs/artifacts.md)**
+
 ## Features
 
 - **Pub/Sub Management**: Create topics, subscriptions, publish and receive messages
 - **Message Ordering**: Support for ordered message delivery with ordering keys
 - **Cloud Storage**: Create buckets with region specification, upload/download files
 - **BigQuery**: Create datasets and tables with complex nested schemas
+- **Artifact Registry**: Create Docker repositories with location specification
 - **Simple CLI Interface**: Easy-to-use command-line tools
 - **Comprehensive Documentation**: Detailed guides for each service
 - **Extensible Architecture**: Easy to add new GCP services
