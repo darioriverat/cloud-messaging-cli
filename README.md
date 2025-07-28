@@ -166,6 +166,9 @@ Manage Google Artifact Registry repositories.
 ```bash
 # Create a Docker repository
 ./artifacts.sh create-docker-repository my-repo --location us-central1
+
+# Tag a local Docker image for registry submission
+./artifacts.sh tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --registry-url us-east1-docker.pkg.dev
 ```
 
 📖 **[Full Artifact Registry Documentation](docs/artifacts.md)**
