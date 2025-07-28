@@ -25,19 +25,19 @@ show_usage() {
     echo ""
     echo "Commands:"
     echo "  create-docker-repository <NAME> [--location <LOCATION>]  Create a new Docker repository"
-    echo "  tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--registry-url <REGISTRY_URL>]  Tag local image for registry submission"
+    echo "  tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]  Tag local image for registry submission"
+    echo "  push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>  Push Docker image to registry"
     echo ""
     echo "Options:"
-    echo "  --location <LOCATION>  Specify the repository location (required for create-docker-repository)"
-    echo "  --local-image <LOCAL_IMAGE>  Local Docker image name (required for tag)"
-    echo "  --remote-image <REMOTE_IMAGE>  Remote image name for registry (required for tag)"
-    echo "  --repository <REPOSITORY>  Repository name (required for tag)"
-    echo "  --registry-url <REGISTRY_URL>  Registry URL (optional, defaults to us-central1-docker.pkg.dev)"
+    echo "  --location <LOCATION>  Specify the repository location (required for create-docker-repository and push-docker-image, optional for tag-docker-image)"
+    echo "  --local-image <LOCAL_IMAGE>  Local Docker image name (required for tag-docker-image)"
+    echo "  --remote-image <REMOTE_IMAGE>  Remote image name for registry (required for tag-docker-image)"
+    echo "  --repository <REPOSITORY>  Repository name (required for tag-docker-image and push-docker-image)"
     echo ""
     echo "Examples:"
     echo "  $0 create-docker-repository my-repo --location us-central1"
-    echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo"
-    echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --registry-url us-east1-docker.pkg.dev"
+    echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-central1"
+    echo "  $0 push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo ""
     echo "Environment Variables:"
     echo "  GCP_PROJECT_ID: Set in .env file or environment to specify the GCP project"
@@ -107,7 +107,7 @@ tag_docker_image() {
     local local_image=""
     local remote_image=""
     local repository=""
-    local registry_url="us-central1-docker.pkg.dev"
+    local location="us-central1"
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -124,8 +124,8 @@ tag_docker_image() {
                 repository="$2"
                 shift 2
                 ;;
-            --registry-url)
-                registry_url="$2"
+            --location)
+                location="$2"
                 shift 2
                 ;;
             --help|-h)
@@ -164,21 +164,92 @@ tag_docker_image() {
         exit 1
     fi
 
+    # Build registry URL from location
+    local registry_url="${location}-docker.pkg.dev"
+
     # Construct the full remote image name
     local full_remote_image="$registry_url/$project_id/$repository/$remote_image"
 
-    echo "Tagging Docker image for registry submission:"
-    echo "  Local image: $local_image"
-    echo "  Remote image: $full_remote_image"
-    echo "  Registry URL: $registry_url"
-    echo "  Project: $project_id"
-    echo "  Repository: $repository"
+    echo "Tagging Docker image for registry submission..."
 
     # Tag the local image with the remote image name
     echo "Executing: docker tag \"$local_image\" \"$full_remote_image\""
     docker tag "$local_image" "$full_remote_image"
 
     echo "Successfully tagged $local_image as $full_remote_image"
+}
+
+    # Function to push Docker image to registry
+push_docker_image() {
+    local image_name=""
+    local repository=""
+    local location=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --repository)
+                repository="$2"
+                shift 2
+                ;;
+            --location)
+                location="$2"
+                shift 2
+                ;;
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                if [[ -z "$image_name" ]]; then
+                    image_name="$1"
+                else
+                    echo "Error: Too many arguments"
+                    show_usage
+                    exit 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    # Validate required arguments
+    if [[ -z "$image_name" ]]; then
+        echo "Error: Image name is required"
+        echo "Usage: $0 push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>"
+        exit 1
+    fi
+
+    if [[ -z "$repository" ]]; then
+        echo "Error: --repository is required"
+        echo "Usage: $0 push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>"
+        exit 1
+    fi
+
+    if [[ -z "$location" ]]; then
+        echo "Error: --location is required"
+        echo "Usage: $0 push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>"
+        exit 1
+    fi
+
+    # Build registry URL from location
+    local registry_url="${location}-docker.pkg.dev"
+
+    # Construct the full remote image name
+    local full_remote_image="$registry_url/$project_id/$repository/$image_name"
+
+    echo "Pushing Docker image to registry..."
+
+    # Push the image to the registry
+    echo "Executing: docker push \"$full_remote_image\""
+    docker push "$full_remote_image"
+
+    echo "Successfully pushed $image_name to $full_remote_image"
 }
 
 # Main script logic
@@ -198,6 +269,9 @@ main() {
             ;;
         "tag-docker-image")
             tag_docker_image "$@"
+            ;;
+        "push-docker-image")
+            push_docker_image "$@"
             ;;
         "help"|"--help"|"-h")
             show_usage
