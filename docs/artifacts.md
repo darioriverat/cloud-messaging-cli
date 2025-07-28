@@ -19,6 +19,13 @@ GCP_PROJECT_ID=your-gcp-project-id
 
 ## Usage
 
+### Docker Authentication
+
+**Configure Docker authentication for a location:**
+```bash
+./artifacts.sh auth-docker-location us-central1
+```
+
 ### Repository Management
 
 **Create a Docker repository:**
@@ -42,16 +49,19 @@ GCP_PROJECT_ID=your-gcp-project-id
 
 **Complete workflow example:**
 ```bash
-# 1. Create a repository
+# 1. Configure Docker authentication
+./artifacts.sh auth-docker-location us-central1
+
+# 2. Create a repository
 ./artifacts.sh create-docker-repository my-app-repo --location us-central1
 
-# 2. Build your Docker image locally
+# 3. Build your Docker image locally
 docker build -t myapp:latest .
 
-# 3. Tag the image for the registry
+# 4. Tag the image for the registry
 ./artifacts.sh tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-app-repo
 
-# 4. Push to the registry
+# 5. Push to the registry
 ./artifacts.sh push-docker-image myapp:v1.0.0 --repository my-app-repo --location us-central1
 ```
 
@@ -59,10 +69,17 @@ docker build -t myapp:latest .
 
 | Command | Description | Example |
 |---------|-------------|---------|
+| `auth-docker-location <LOCATION>` | Configure Docker authentication for the specified location | `./artifacts.sh auth-docker-location us-central1` |
 | `create-docker-repository <NAME> --location <LOCATION>` | Create a new Docker repository | `./artifacts.sh create-docker-repository my-repo --location us-central1` |
 | `tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]` | Tag local Docker image for registry submission | `./artifacts.sh tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo` |
 | `push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>` | Push Docker image to registry | `./artifacts.sh push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1` |
 | `help` or `--help` or `-h` | Show help information | `./artifacts.sh help` |
+
+### Auth Docker Location Options
+
+| Option | Required | Description | Default |
+|--------|----------|-------------|---------|
+| `<LOCATION>` | Yes | GCP region (e.g., `us-central1`, `us-east1`) | - |
 
 ### Tag Docker Image Options
 
@@ -84,6 +101,7 @@ docker build -t myapp:latest .
 ## Notes
 
 - **Project Configuration**: The script automatically sets the GCP project using `gcloud config set core/project` if `GCP_PROJECT_ID` is provided
+- **Docker Authentication**: The `auth-docker-location` command configures Docker to authenticate with Google Cloud Artifact Registry for the specified location
 - **Location Requirement**: The `--location` parameter is required for creating repositories and pushing images, optional for tagging (defaults to `us-central1`)
 - **Repository Format**: Currently supports Docker format repositories
 - **Image Tagging**: The `tag-docker-image` command automatically constructs the full remote image name using the format: `{location}-docker.pkg.dev/{project-id}/{repository}/{remote-image}`

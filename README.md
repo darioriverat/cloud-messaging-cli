@@ -164,6 +164,9 @@ Manage Google Artifact Registry repositories.
 
 **Quick Start:**
 ```bash
+# Configure Docker authentication (for pushing images)
+./artifacts.sh auth-docker-location us-central1
+
 # Create a Docker repository
 ./artifacts.sh create-docker-repository my-repo --location us-central1
 
