@@ -2,7 +2,6 @@ import os
 from google.cloud import pubsub_v1
 from dotenv import load_dotenv
 import argparse
-import time
 
 os.environ.clear()
 load_dotenv()
@@ -11,14 +10,14 @@ load_dotenv()
 parser = argparse.ArgumentParser(description='Argument parser for pubsub.')
 parser.add_argument('--create-topic', type=str, help='Name of the topic to create')
 parser.add_argument('--list-topics', action='store_true', help='List all topics in the project')
-parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
-parser.add_argument('--ordered', action='store_true', help='Enable message ordering for subscription (use with --subscribe)')
+parser.add_argument('--delete-topic', type=str, help='Name of the topic to delete')
 parser.add_argument('--publish', nargs=2, metavar=('TOPIC_NAME', 'MESSAGE'), help='Publish a message to a topic')
 parser.add_argument('--ordering-key', type=str, help='Ordering key for message ordering (use with --publish)')
+parser.add_argument('--subscribe', nargs=2, metavar=('TOPIC_NAME', 'SUBSCRIPTION_NAME'), help='Create a subscription to a topic')
+parser.add_argument('--ordered', action='store_true', help='Enable message ordering for subscription (use with --subscribe)')
+parser.add_argument('--delete-subscription', type=str, help='Name of the subscription to delete')
 parser.add_argument('--receive', nargs='+', metavar=('SUBSCRIPTION_NAME', 'MAX_MESSAGES'), help='Receive pending messages from a subscription (optional: specify max number of messages)')
 parser.add_argument('--listen', nargs='+', metavar=('SUBSCRIPTION_NAME', 'TIMEOUT'), help='Listen for messages from a subscription (optional: specify timeout in seconds, default: 60 seconds)')
-parser.add_argument('--delete-subscription', type=str, help='Name of the subscription to delete')
-parser.add_argument('--delete-topic', type=str, help='Name of the topic to delete')
 
 project_id = os.getenv("GCP_PROJECT_ID")
 service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_PATH")
@@ -60,28 +59,18 @@ elif args.list_topics:
     else:
         print("No topics found in the project.")
 
-# check for arg subscribe
-elif args.subscribe:
-    topic_name, subscription_name = args.subscribe
+# check for arg delete_topic
+elif args.delete_topic:
+    topic_name = args.delete_topic
 
-    print(f"Creating subscription '{subscription_name}' to topic '{topic_name}'")
-    if args.ordered:
-        print("Message ordering enabled for this subscription")
+    print(f"Deleting topic: {topic_name}")
 
-    subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
-    topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    publisher = pubsub_v1.PublisherClient.from_service_account_file(service_account_file)
+    topic_path = publisher.topic_path(project_id, topic_name)
 
-    # Create the subscription with optional message ordering
-    subscription_request = {"name": subscription_path, "topic": topic_path}
-    if args.ordered:
-        subscription_request["enable_message_ordering"] = True
+    publisher.delete_topic(request={"topic": topic_path})
 
-    subscription = subscriber.create_subscription(request=subscription_request)
-
-    print(f"Created subscription: {subscription.name}")
-    if args.ordered:
-        print("✓ Message ordering is enabled for this subscription")
+    print(f"Topic {topic_name} deleted")
 
 # check for arg publish
 elif args.publish:
@@ -116,6 +105,42 @@ elif args.publish:
         message_id = future.result()
         print(f"Published message with ID: {message_id}")
 
+# check for arg subscribe
+elif args.subscribe:
+    topic_name, subscription_name = args.subscribe
+
+    print(f"Creating subscription '{subscription_name}' to topic '{topic_name}'")
+    if args.ordered:
+        print("Message ordering enabled for this subscription")
+
+    subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
+    topic_path = subscriber.topic_path(project_id, topic_name)
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+
+    # Create the subscription with optional message ordering
+    subscription_request = {"name": subscription_path, "topic": topic_path}
+    if args.ordered:
+        subscription_request["enable_message_ordering"] = True
+
+    subscription = subscriber.create_subscription(request=subscription_request)
+
+    print(f"Created subscription: {subscription.name}")
+    if args.ordered:
+        print("✓ Message ordering is enabled for this subscription")
+
+# check for arg delete_subscription
+elif args.delete_subscription:
+    subscription_name = args.delete_subscription
+
+    print(f"Deleting subscription: {subscription_name}")
+
+    subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+
+    subscriber.delete_subscription(request={"subscription": subscription_path})
+
+    print(f"Subscription {subscription_name} deleted")
+
 # check for arg receive (single message)
 elif args.receive:
     subscription_name = args.receive[0]
@@ -135,7 +160,7 @@ elif args.receive:
 
     print(f"Receiving pending messages from subscription '{subscription_name}'...")
     if max_messages < 1000:
-        print(f"Maximum messages to pull: {max_messages}")
+        print(f"Pulling {max_messages} pending messages")
     else:
         print("Pulling all pending messages (up to 1000)")
 
@@ -146,7 +171,6 @@ elif args.receive:
     response = subscriber.pull(request={"subscription": subscription_path, "max_messages": max_messages})
 
     if response.received_messages:
-        print(f"Found {len(response.received_messages)} pending message(s):")
         ack_ids = []
 
         for i, received_message in enumerate(response.received_messages, 1):
@@ -212,32 +236,6 @@ elif args.listen:
         # Cancel the subscription
         streaming_pull_future.cancel()
         streaming_pull_future.result()
-
-# check for arg delete_subscription
-elif args.delete_subscription:
-    subscription_name = args.delete_subscription
-
-    print(f"Deleting subscription: {subscription_name}")
-
-    subscriber = pubsub_v1.SubscriberClient.from_service_account_file(service_account_file)
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
-
-    subscriber.delete_subscription(request={"subscription": subscription_path})
-
-    print(f"Subscription {subscription_name} deleted")
-
-# check for arg delete_topic
-elif args.delete_topic:
-    topic_name = args.delete_topic
-
-    print(f"Deleting topic: {topic_name}")
-
-    publisher = pubsub_v1.PublisherClient.from_service_account_file(service_account_file)
-    topic_path = publisher.topic_path(project_id, topic_name)
-
-    publisher.delete_topic(request={"topic": topic_path})
-
-    print(f"Topic {topic_name} deleted")
 
 else:
     print(parser.format_help())
