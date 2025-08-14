@@ -17,17 +17,17 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 
 **List all topics:**
 ```bash
-python pubsub.py --list-topics
+./gcpcli.py pubsub --list-topics
 ```
 
 **Create a topic:**
 ```bash
-python pubsub.py --create-topic mytopic
+./gcpcli.py pubsub --create-topic mytopic
 ```
 
 **Delete a topic:**
 ```bash
-python pubsub.py --delete-topic mytopic
+./gcpcli.py pubsub --delete-topic mytopic
 ```
 
 > **Important Note**: Deleting a topic will permanently remove it. However, subscriptions to the topic will remain and must be deleted separately. This action cannot be undone. Make sure you have backed up any important data before deletion.
@@ -36,17 +36,17 @@ python pubsub.py --delete-topic mytopic
 
 **Create a subscription to a topic:**
 ```bash
-python pubsub.py --subscribe mytopic subscription-name
+./gcpcli.py pubsub --subscribe mytopic subscription-name
 ```
 
 **Create a subscription with message ordering enabled:**
 ```bash
-python pubsub.py --subscribe mytopic subscription-name --ordered
+./gcpcli.py pubsub --subscribe mytopic subscription-name --ordered
 ```
 
 **Delete a subscription:**
 ```bash
-python pubsub.py --delete-subscription subscription-name
+./gcpcli.py pubsub --delete-subscription subscription-name
 ```
 
 > **Note**: Message ordering ensures that messages with the same ordering key are delivered in the order they were published. This is useful for scenarios where message sequence matters (e.g., user actions, financial transactions).
@@ -55,12 +55,12 @@ python pubsub.py --delete-subscription subscription-name
 
 **Publish a message to a topic:**
 ```bash
-python pubsub.py --publish mytopic "Your message here"
+./gcpcli.py pubsub --publish mytopic "Your message here"
 ```
 
 **Publish a message with an ordering key:**
 ```bash
-python pubsub.py --publish mytopic "Your message here" --ordering-key user-123
+./gcpcli.py pubsub --publish mytopic "Your message here" --ordering-key user-123
 ```
 
 > **Note**: Ordering keys are used with ordered subscriptions to ensure messages with the same key are delivered in the order they were published. This is essential for maintaining message sequence for related events.
@@ -69,48 +69,48 @@ python pubsub.py --publish mytopic "Your message here" --ordering-key user-123
 
 **Receive all pending messages from a subscription:**
 ```bash
-python pubsub.py --receive subscription-name
+./gcpcli.py pubsub --receive subscription-name
 ```
 
 **Receive a specific number of pending messages:**
 ```bash
-python pubsub.py --receive subscription-name 5
+./gcpcli.py pubsub --receive subscription-name 5
 ```
 
 **Receive just one message:**
 ```bash
-python pubsub.py --receive subscription-name 1
+./gcpcli.py pubsub --receive subscription-name 1
 ```
 
 ### Message Listening
 
 **Listen indefinitely for new messages:**
 ```bash
-python pubsub.py --listen subscription-name
+./gcpcli.py pubsub --listen subscription-name
 ```
 
 **Listen for a specific time period:**
 ```bash
-python pubsub.py --listen subscription-name 30
+./gcpcli.py pubsub --listen subscription-name 30
 ```
 
 **Listen for 2 minutes:**
 ```bash
-python pubsub.py --listen subscription-name 120
+./gcpcli.py pubsub --listen subscription-name 120
 ```
 
 ## Command Reference
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `--list-topics` | List all topics in the project | `python pubsub.py --list-topics` |
-| `--create-topic <name>` | Create a new topic | `python pubsub.py --create-topic mytopic` |
-| `--delete-topic <name>` | Delete a topic | `python pubsub.py --delete-topic mytopic` |
-| `--subscribe <topic> <subscription> [--ordered]` | Create a subscription to a topic (with optional message ordering) | `python pubsub.py --subscribe mytopic mysub --ordered` |
-| `--delete-subscription <name>` | Delete a subscription | `python pubsub.py --delete-subscription mysub` |
-| `--publish <topic> <message> [--ordering-key <key>]` | Publish a message to a topic (with optional ordering key) | `python pubsub.py --publish mytopic "Hello" --ordering-key user-123` |
-| `--receive <subscription> [count]` | Receive pending messages (optional count) | `python pubsub.py --receive mysub 5` |
-| `--listen <subscription> [timeout]` | Listen for new messages (optional timeout in seconds) | `python pubsub.py --listen mysub 60` |
+| `--list-topics` | List all topics in the project | `./gcpcli.py pubsub --list-topics` |
+| `--create-topic <name>` | Create a new topic | `./gcpcli.py pubsub --create-topic mytopic` |
+| `--delete-topic <name>` | Delete a topic | `./gcpcli.py pubsub --delete-topic mytopic` |
+| `--subscribe <topic> <subscription> [--ordered]` | Create a subscription to a topic (with optional message ordering) | `./gcpcli.py pubsub --subscribe mytopic mysub --ordered` |
+| `--delete-subscription <name>` | Delete a subscription | `./gcpcli.py pubsub --delete-subscription mysub` |
+| `--publish <topic> <message> [--ordering-key <key>]` | Publish a message to a topic (with optional ordering key) | `./gcpcli.py pubsub --publish mytopic "Hello" --ordering-key user-123` |
+| `--receive <subscription> [count]` | Receive pending messages (optional count) | `./gcpcli.py pubsub --receive mysub 5` |
+| `--listen <subscription> [timeout]` | Listen for new messages (optional timeout in seconds) | `./gcpcli.py pubsub --listen mysub 60` |
 
 ## Notes
 

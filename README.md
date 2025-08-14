@@ -48,6 +48,34 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 
 The key file will be downloaded to your computer. Store it securely, as it contains credentials for accessing your GCP services.
 
+## CLI Interfaces
+
+The toolkit provides two unified CLI interfaces for easy access to all tools:
+
+### Python Scripts Interface (`gcpcli.py`)
+
+For Python-based tools (Pub/Sub, BigQuery, Cloud Storage):
+
+```bash
+# Using python command
+python gcpcli.py <script_name> [args...]
+
+# Using executable directly
+./gcpcli.py <script_name> [args...]
+```
+
+### Shell Scripts Interface (`gcpcli.sh`)
+
+For shell-based tools (Artifact Registry):
+
+```bash
+# Shell scripts
+./gcpcli.sh <script_name> [args...]
+
+# Python scripts (with --python flag)
+./gcpcli.sh --python <script_name> [args...]
+```
+
 ## Available Tools
 
 ### [Pub/Sub CLI](docs/pubsub.md)
@@ -57,25 +85,25 @@ Manage Google Cloud Pub/Sub topics, subscriptions, and messages.
 **Quick Start:**
 ```bash
 # List all topics
-python pubsub.py --list-topics
+./gcpcli.py pubsub --list-topics
 
 # Create a topic
-python pubsub.py --create-topic mytopic
+./gcpcli.py pubsub --create-topic mytopic
 
 # Create a subscription
-python pubsub.py --subscribe mytopic subscription-name
+./gcpcli.py pubsub --subscribe mytopic subscription-name
 
 # Publish a message
-python pubsub.py --publish mytopic "Hello World"
+./gcpcli.py pubsub --publish mytopic "Hello World"
 
 # Receive messages
-python pubsub.py --receive subscription-name
+./gcpcli.py pubsub --receive subscription-name
 
 # Delete a subscription
-python pubsub.py --delete-subscription subscription-name
+./gcpcli.py pubsub --delete-subscription subscription-name
 
 # Delete a topic (⚠️ permanent)
-python pubsub.py --delete-topic mytopic
+./gcpcli.py pubsub --delete-topic mytopic
 ```
 
 📖 **[Full Pub/Sub Documentation](docs/pubsub.md)**
@@ -87,31 +115,31 @@ Manage Google Cloud Storage buckets.
 **Quick Start:**
 ```bash
 # List all buckets
-python cloud-storage.py --list-buckets
+./gcpcli.py cloud-storage --list-buckets
 
 # Create a bucket in default location
-python cloud-storage.py --create-bucket my-bucket-name
+./gcpcli.py cloud-storage --create-bucket my-bucket-name
 
 # Create a bucket in specific region
-python cloud-storage.py --create-bucket my-bucket-name --region us-central1
+./gcpcli.py cloud-storage --create-bucket my-bucket-name --region us-central1
 
 # Upload a file to a bucket
-python cloud-storage.py --upload-file my-bucket-name file.txt
+./gcpcli.py cloud-storage --upload-file my-bucket-name file.txt
 
 # Download a file from a bucket
-python cloud-storage.py --download-file my-bucket-name file.txt
+./gcpcli.py cloud-storage --download-file my-bucket-name file.txt
 
 # Download a file to a specific destination
-python cloud-storage.py --download-file my-bucket-name file.txt ./downloaded-file.txt
+./gcpcli.py cloud-storage --download-file my-bucket-name file.txt ./downloaded-file.txt
 
 # Delete a file from a bucket
-python cloud-storage.py --delete-file my-bucket-name file.txt
+./gcpcli.py cloud-storage --delete-file my-bucket-name file.txt
 
 # Delete a bucket (⚠️ permanent)
-python cloud-storage.py --delete-bucket my-bucket-name
+./gcpcli.py cloud-storage --delete-bucket my-bucket-name
 
 # Force delete bucket with all contents (⚠️ permanent)
-python cloud-storage.py --delete-bucket my-bucket-name --force
+./gcpcli.py cloud-storage --delete-bucket my-bucket-name --force
 ```
 
 📖 **[Full Cloud Storage Documentation](docs/cloud-storage.md)**
@@ -123,37 +151,37 @@ Manage Google BigQuery datasets and tables.
 **Quick Start:**
 ```bash
 # Create a dataset
-python bigquery.py --create-dataset my-dataset-name
+./gcpcli.py bigquery --create-dataset my-dataset-name
 
 # Delete a dataset (⚠️ permanent)
-python bigquery.py --delete-dataset my-dataset-name
+./gcpcli.py bigquery --delete-dataset my-dataset-name
 
 # Delete a dataset with force (deletes all tables first)
-python bigquery.py --delete-dataset my-dataset-name --force
+./gcpcli.py bigquery --delete-dataset my-dataset-name --force
 
 # Create a table in a dataset
-python bigquery.py --create-table my-dataset-name my-table-name
+./gcpcli.py bigquery --create-table my-dataset-name my-table-name
 
 # Create a table with schema
-python bigquery.py --create-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
+./gcpcli.py bigquery --create-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
 
 # Update a table's schema
-python bigquery.py --update-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
+./gcpcli.py bigquery --update-table my-dataset-name my-table-name --json-schema examples/bigquery/schema_example.json
 
 # Delete a table (⚠️ permanent)
-python bigquery.py --delete-table my-dataset-name my-table-name
+./gcpcli.py bigquery --delete-table my-dataset-name my-table-name
 
 # Load CSV data into a table
-python bigquery.py --load-csv my-dataset-name my-table-name data.csv
+./gcpcli.py bigquery --load-csv my-dataset-name my-table-name data.csv
 
 # Load CSV with custom delimiter
-python bigquery.py --load-csv my-dataset-name my-table-name data.csv --delimiter ";"
+./gcpcli.py bigquery --load-csv my-dataset-name my-table-name data.csv --delimiter ";"
 
 # Execute a query from command line
-python bigquery.py --query "SELECT * FROM my-dataset-name.my-table-name LIMIT 10"
+./gcpcli.py bigquery --query "SELECT * FROM my-dataset-name.my-table-name LIMIT 10"
 
 # Execute a query from a file
-python bigquery.py --query-file query.sql
+./gcpcli.py bigquery --query-file query.sql
 ```
 
 📖 **[Full BigQuery Documentation](docs/bigquery.md)**
@@ -165,22 +193,23 @@ Manage Google Artifact Registry repositories.
 **Quick Start:**
 ```bash
 # Configure Docker authentication (for pushing images)
-./artifacts.sh auth-docker-location us-central1
+./gcpcli.sh artifacts auth-docker-location us-central1
 
 # Create a Docker repository
-./artifacts.sh create-docker-repository my-repo --location us-central1
+./gcpcli.sh artifacts create-docker-repository my-repo --location us-central1
 
 # Tag a local Docker image for registry submission
-./artifacts.sh tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-east1
+./gcpcli.sh artifacts tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-east1
 
 # Push Docker image to registry
-./artifacts.sh push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1
+./gcpcli.sh artifacts push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1
 ```
 
 📖 **[Full Artifact Registry Documentation](docs/artifacts.md)**
 
 ## Features
 
+- **Unified CLI Interface**: Two clean interfaces for Python and shell scripts
 - **Pub/Sub Management**: Create topics, subscriptions, publish and receive messages
 - **Message Ordering**: Support for ordered message delivery with ordering keys
 - **Cloud Storage**: Create buckets with region specification, upload/download files
@@ -194,6 +223,6 @@ Manage Google Artifact Registry repositories.
 
 - All tools require proper GCP service account configuration
 - Make sure your service account has the necessary permissions for the services you want to use
-- Currently supports Google Cloud Pub/Sub, Cloud Storage, and BigQuery
+- Currently supports Google Cloud Pub/Sub, Cloud Storage, BigQuery, and Artifact Registry
 - Extensible architecture allows easy addition of new GCP services
 - Comprehensive examples and documentation for each service

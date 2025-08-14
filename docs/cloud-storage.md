@@ -17,64 +17,64 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 
 **Create a bucket in the default location:**
 ```bash
-python cloud-storage.py --create-bucket my-bucket-name
+./gcpcli.py cloud-storage --create-bucket my-bucket-name
 ```
 
 **Create a bucket in a specific region:**
 ```bash
-python cloud-storage.py --create-bucket my-bucket-name --region us-central1
+./gcpcli.py cloud-storage --create-bucket my-bucket-name --region us-central1
 ```
 
 **List all buckets in the project:**
 ```bash
-python cloud-storage.py --list-buckets
+./gcpcli.py cloud-storage --list-buckets
 ```
 
 **Delete a bucket:**
 ```bash
-python cloud-storage.py --delete-bucket my-bucket-name
+./gcpcli.py cloud-storage --delete-bucket my-bucket-name
 ```
 
 **Force delete a bucket (delete all objects first):**
 ```bash
-python cloud-storage.py --delete-bucket my-bucket-name --force
+./gcpcli.py cloud-storage --delete-bucket my-bucket-name --force
 ```
 
 ### File Operations
 
 **Upload a file to a bucket:**
 ```bash
-python cloud-storage.py --upload-file my-bucket-name /path/to/file.txt
+./gcpcli.py cloud-storage --upload-file my-bucket-name /path/to/file.txt
 ```
 
 **Upload a file with relative path:**
 ```bash
-python cloud-storage.py --upload-file my-bucket-name ./file.txt
+./gcpcli.py cloud-storage --upload-file my-bucket-name ./file.txt
 ```
 
 **Download a file from a bucket (preserves original path):**
 ```bash
-python cloud-storage.py --download-file my-bucket-name /path/to/file.txt
+./gcpcli.py cloud-storage --download-file my-bucket-name /path/to/file.txt
 ```
 
 **Download a file to a specific destination:**
 ```bash
-python cloud-storage.py --download-file my-bucket-name /path/to/file.txt ./downloaded-file.txt
+./gcpcli.py cloud-storage --download-file my-bucket-name /path/to/file.txt ./downloaded-file.txt
 ```
 
 **Download a file to a different directory:**
 ```bash
-python cloud-storage.py --download-file my-bucket-name file.txt /home/user/downloads/new-file.txt
+./gcpcli.py cloud-storage --download-file my-bucket-name file.txt /home/user/downloads/new-file.txt
 ```
 
 **Delete a file from a bucket:**
 ```bash
-python cloud-storage.py --delete-file my-bucket-name /path/to/file.txt
+./gcpcli.py cloud-storage --delete-file my-bucket-name /path/to/file.txt
 ```
 
 **Delete a file with relative path:**
 ```bash
-python cloud-storage.py --delete-file my-bucket-name ./file.txt
+./gcpcli.py cloud-storage --delete-file my-bucket-name ./file.txt
 ```
 
 > **Important Note**: When uploading files, GCP will create the underlying "path" structure in Cloud Storage based on the file path you provide. For example:
@@ -96,14 +96,14 @@ python cloud-storage.py --delete-file my-bucket-name ./file.txt
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `--create-bucket <name>` | Create a new bucket | `python cloud-storage.py --create-bucket my-bucket` |
-| `--list-buckets` | List all buckets in the project | `python cloud-storage.py --list-buckets` |
-| `--upload-file <bucket> <file>` | Upload a file to a bucket | `python cloud-storage.py --upload-file my-bucket file.txt` |
-| `--download-file <bucket> <file> [dest]` | Download a file from a bucket (optional destination) | `python cloud-storage.py --download-file my-bucket file.txt ./local-file.txt` |
-| `--delete-file <bucket> <file>` | Delete a file from a bucket | `python cloud-storage.py --delete-file my-bucket file.txt` |
-| `--delete-bucket <name> [--force]` | Delete a bucket (use --force for non-empty buckets) | `python cloud-storage.py --delete-bucket my-bucket --force` |
-| `--force` | Force delete bucket (delete all objects first) | `python cloud-storage.py --delete-bucket my-bucket --force` |
-| `--region <region>` | Specify the region for bucket creation | `python cloud-storage.py --create-bucket my-bucket --region us-central1` |
+| `--create-bucket <name>` | Create a new bucket | `./gcpcli.py cloud-storage --create-bucket my-bucket` |
+| `--list-buckets` | List all buckets in the project | `./gcpcli.py cloud-storage --list-buckets` |
+| `--upload-file <bucket> <file>` | Upload a file to a bucket | `./gcpcli.py cloud-storage --upload-file my-bucket file.txt` |
+| `--download-file <bucket> <file> [dest]` | Download a file from a bucket (optional destination) | `./gcpcli.py cloud-storage --download-file my-bucket file.txt ./local-file.txt` |
+| `--delete-file <bucket> <file>` | Delete a file from a bucket | `./gcpcli.py cloud-storage --delete-file my-bucket file.txt` |
+| `--delete-bucket <name> [--force]` | Delete a bucket (use --force for non-empty buckets) | `./gcpcli.py cloud-storage --delete-bucket my-bucket --force` |
+| `--force` | Force delete bucket (delete all objects first) | `./gcpcli.py cloud-storage --delete-bucket my-bucket --force` |
+| `--region <region>` | Specify the region for bucket creation | `./gcpcli.py cloud-storage --create-bucket my-bucket --region us-central1` |
 
 ## Common GCP Regions
 

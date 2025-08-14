@@ -17,17 +17,17 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 
 **Create a dataset:**
 ```bash
-python bigquery.py --create-dataset my-dataset-name
+./gcpcli.py bigquery --create-dataset my-dataset-name
 ```
 
 **Delete a dataset:**
 ```bash
-python bigquery.py --delete-dataset my-dataset-name
+./gcpcli.py bigquery --delete-dataset my-dataset-name
 ```
 
 **Delete a dataset with force (deletes all tables first):**
 ```bash
-python bigquery.py --delete-dataset my-dataset-name --force
+./gcpcli.py bigquery --delete-dataset my-dataset-name --force
 ```
 
 > **Important Note**: Deleting a dataset will permanently remove it and all its tables and data. This action cannot be undone. The `--force` option will delete all tables in the dataset before deleting the dataset itself.
@@ -36,47 +36,47 @@ python bigquery.py --delete-dataset my-dataset-name --force
 
 **Create a table in a dataset:**
 ```bash
-python bigquery.py --create-table my-dataset-name my-table-name
+./gcpcli.py bigquery --create-table my-dataset-name my-table-name
 ```
 
 **Create a table with schema:**
 ```bash
-python bigquery.py --create-table my-dataset-name my-table-name --json-schema schema.json
+./gcpcli.py bigquery --create-table my-dataset-name my-table-name --json-schema schema.json
 ```
 
 **Update a table's schema:**
 ```bash
-python bigquery.py --update-table my-dataset-name my-table-name --json-schema schema.json
+./gcpcli.py bigquery --update-table my-dataset-name my-table-name --json-schema schema.json
 ```
 
 **Delete a table:**
 ```bash
-python bigquery.py --delete-table my-dataset-name my-table-name
+./gcpcli.py bigquery --delete-table my-dataset-name my-table-name
 ```
 
 **Load CSV data into a table:**
 ```bash
-python bigquery.py --load-csv my-dataset-name my-table-name path/to/data.csv
+./gcpcli.py bigquery --load-csv my-dataset-name my-table-name path/to/data.csv
 ```
 
 **Load CSV with header row:**
 ```bash
-python bigquery.py --load-csv my-dataset-name my-table-name path/to/data.csv --skip-rows 1
+./gcpcli.py bigquery --load-csv my-dataset-name my-table-name path/to/data.csv --skip-rows 1
 ```
 
 **Execute a query from command line:**
 ```bash
-python bigquery.py --query "SELECT * FROM my-dataset-name.my-table-name LIMIT 10"
+./gcpcli.py bigquery --query "SELECT * FROM my-dataset-name.my-table-name LIMIT 10"
 ```
 
 **Execute a query from a file:**
 ```bash
-python bigquery.py --query-file path/to/query.sql
+./gcpcli.py bigquery --query-file path/to/query.sql
 ```
 
 **Execute a direct query:**
 ```bash
-python bigquery.py --query "SELECT COUNT(*) FROM my-dataset.my-table"
+./gcpcli.py bigquery --query "SELECT COUNT(*) FROM my-dataset.my-table"
 ```
 
 > **Important Note**: Deleting a table will permanently remove it and all its data. This action cannot be undone. Make sure you have backed up any important data before deletion.
@@ -138,11 +138,11 @@ When loading CSV data into BigQuery tables, consider the following:
 ### **Common Use Cases:**
 ```bash
 # Load standard CSV
-python bigquery.py --load-csv my-dataset my-table data.csv
+./gcpcli.py bigquery --load-csv my-dataset my-table data.csv
 
 # Load into table with defined schema
-python bigquery.py --create-table my-dataset my-table --json-schema schema.json
-python bigquery.py --load-csv my-dataset my-table data.csv
+./gcpcli.py bigquery --create-table my-dataset my-table --json-schema schema.json
+./gcpcli.py bigquery --load-csv my-dataset my-table data.csv
 ```
 
 ## Query Execution
@@ -170,16 +170,16 @@ BigQuery provides powerful SQL querying capabilities. The CLI supports multiple 
 ### **Common Query Patterns:**
 ```bash
 # Simple SELECT from command line
-python bigquery.py --query "SELECT * FROM my-dataset.my-table LIMIT 10"
+./gcpcli.py bigquery --query "SELECT * FROM my-dataset.my-table LIMIT 10"
 
 # Aggregation from command line
-python bigquery.py --query "SELECT COUNT(*) FROM my-dataset.my-table"
+./gcpcli.py bigquery --query "SELECT COUNT(*) FROM my-dataset.my-table"
 
 # Complex query from file
-python bigquery.py --query-file complex_analysis.sql
+./gcpcli.py bigquery --query-file complex_analysis.sql
 
 # Parameterized-like query from command line
-python bigquery.py --query "SELECT * FROM my-dataset.my-table WHERE date >= '2024-01-01'"
+./gcpcli.py bigquery --query "SELECT * FROM my-dataset.my-table WHERE date >= '2024-01-01'"
 ```
 
 ### **Query File Example (`queries/employee_analysis.sql`):**
@@ -199,16 +199,16 @@ ORDER BY avg_salary DESC
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `--create-dataset <name>` | Create a new dataset | `python bigquery.py --create-dataset my-dataset` |
-| `--delete-dataset <name> [--force]` | Delete a dataset (--force deletes all tables first) | `python bigquery.py --delete-dataset my-dataset --force` |
-| `--create-table <dataset> <table> [--json-schema <file>]` | Create a new table in a dataset (optional schema) | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
-| `--update-table <dataset> <table> --json-schema <file>` | Update a table's schema | `python bigquery.py --update-table my-dataset my-table --json-schema schema.json` |
-| `--delete-table <dataset> <table>` | Delete a table | `python bigquery.py --delete-table my-dataset my-table` |
-| `--load-csv <dataset> <table> <file>` | Load CSV data into a table | `python bigquery.py --load-csv my-dataset my-table data.csv` |
-| `--query <sql>` | Execute SQL query from command line | `python bigquery.py --query "SELECT * FROM my-dataset.my-table"` |
-| `--query-file <file>` | Execute SQL query from file | `python bigquery.py --query-file query.sql` |
-| `--json-schema <file>` | JSON schema file for table creation/update | `python bigquery.py --create-table my-dataset my-table --json-schema schema.json` |
-| `--force` | Force deletion (deletes all contained objects first) | `python bigquery.py --delete-dataset my-dataset --force` |
+| `--create-dataset <name>` | Create a new dataset | `./gcpcli.py bigquery --create-dataset my-dataset` |
+| `--delete-dataset <name> [--force]` | Delete a dataset (--force deletes all tables first) | `./gcpcli.py bigquery --delete-dataset my-dataset --force` |
+| `--create-table <dataset> <table> [--json-schema <file>]` | Create a new table in a dataset (optional schema) | `./gcpcli.py bigquery --create-table my-dataset my-table --json-schema schema.json` |
+| `--update-table <dataset> <table> --json-schema <file>` | Update a table's schema | `./gcpcli.py bigquery --update-table my-dataset my-table --json-schema schema.json` |
+| `--delete-table <dataset> <table>` | Delete a table | `./gcpcli.py bigquery --delete-table my-dataset my-table` |
+| `--load-csv <dataset> <table> <file>` | Load CSV data into a table | `./gcpcli.py bigquery --load-csv my-dataset my-table data.csv` |
+| `--query <sql>` | Execute SQL query from command line | `./gcpcli.py bigquery --query "SELECT * FROM my-dataset.my-table"` |
+| `--query-file <file>` | Execute SQL query from file | `./gcpcli.py bigquery --query-file query.sql` |
+| `--json-schema <file>` | JSON schema file for table creation/update | `./gcpcli.py bigquery --create-table my-dataset my-table --json-schema schema.json` |
+| `--force` | Force deletion (deletes all contained objects first) | `./gcpcli.py bigquery --delete-dataset my-dataset --force` |
 
 ## Common BigQuery Locations
 
