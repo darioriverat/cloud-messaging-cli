@@ -35,7 +35,7 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py cloud-storage --delete-bucket my-bucket-name
 ```
 
-> **Important Note**: Trying to delete a non-empty bucket will trigger an error. Use the flag `--force` to force the deletion of all contents first.
+> **Note**: Trying to delete a non-empty bucket will trigger an error. Use the flag `--force` to force the deletion of all contents first.
 
 **Force delete a bucket (delete all objects first):**
 ```bash
