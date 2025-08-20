@@ -62,7 +62,7 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py cloud-storage --download-file my-bucket-name /path/to/file.txt
 ```
 
-> **Note**: When downloading files from Cloud Storage we must ensure the cloud folder structure match the host file sysmtem structure. If we download `/path/folder/file.txt` the directory `/path/folder/` must exists in the host machine.
+> **Note**: When downloading files from Cloud Storage we must ensure the cloud folder structure match the host file system structure. If we download `/path/folder/file.txt` the directory `/path/folder/` must exists in the host machine.
 
 **Download a file to a specific destination:**
 ```bash
