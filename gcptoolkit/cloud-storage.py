@@ -38,11 +38,11 @@ if args.create_bucket:
 
     if region:
         # Create bucket with specific region
-        bucket = storage_client.create_bucket(bucket_name, location=region)
+        bucket = storage_client.create_bucket(bucket_name, location=region, project=project_id)
         print(f"Bucket {bucket.name} created in region {region}")
     else:
         # Create bucket in default location
-        bucket = storage_client.create_bucket(bucket_name)
+        bucket = storage_client.create_bucket(bucket_name, project=project_id)
         print(f"Bucket {bucket.name} created in default location")
 
 # check for arg list_buckets
@@ -52,7 +52,7 @@ elif args.list_buckets:
     storage_client = storage.Client.from_service_account_json(service_account_file)
 
     # List all buckets in the project
-    buckets = list(storage_client.list_buckets())
+    buckets = list(storage_client.list_buckets(project=project_id))
 
     if buckets:
         print(f"Found {len(buckets)} bucket(s):")
