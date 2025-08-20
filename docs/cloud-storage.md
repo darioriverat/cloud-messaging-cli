@@ -35,6 +35,8 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py cloud-storage --delete-bucket my-bucket-name
 ```
 
+> **Important Note**: Trying to delete a non-empty bucket will trigger an error. Use the flag `--force` to force the deletion of all contents first.
+
 **Force delete a bucket (delete all objects first):**
 ```bash
 ./gcpcli.py cloud-storage --delete-bucket my-bucket-name --force
@@ -51,6 +53,9 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ```bash
 ./gcpcli.py cloud-storage --upload-file my-bucket-name ./file.txt
 ```
+
+> **Important Note**: Submitting `./file.txt` is different from sumbitting `file.txt`, as GCP will create a folder called `./` which is distinct from the root folder.
+
 
 **Download a file from a bucket (preserves original path):**
 ```bash
