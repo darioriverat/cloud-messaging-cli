@@ -54,7 +54,7 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py cloud-storage --upload-file my-bucket-name ./file.txt
 ```
 
-> **Important Note**: Submitting `./file.txt` is different from sumbitting `file.txt`, as GCP will create a folder called `./` which is distinct from the root folder.
+> **Note**: Submitting `./file.txt` is different from sumbitting `file.txt`, as GCP will create a folder called `./` which is distinct from the root folder.
 
 
 **Download a file from a bucket (preserves original path):**
@@ -62,14 +62,11 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py cloud-storage --download-file my-bucket-name /path/to/file.txt
 ```
 
+> **Note**: When downloading files from Cloud Storage we must ensure the cloud folder structure match the host file sysmtem structure. If we download `/path/folder/file.txt` the directory `/path/folder/` must exists in the host machine.
+
 **Download a file to a specific destination:**
 ```bash
-./gcpcli.py cloud-storage --download-file my-bucket-name /path/to/file.txt ./downloaded-file.txt
-```
-
-**Download a file to a different directory:**
-```bash
-./gcpcli.py cloud-storage --download-file my-bucket-name file.txt /home/user/downloads/new-file.txt
+./gcpcli.py cloud-storage --download-file my-bucket-name /path/to/file.txt ~/downloaded-file.txt
 ```
 
 **Delete a file from a bucket:**
@@ -89,13 +86,6 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 >
 > Consider using simple filenames or organizing your uploads with specific paths to avoid unexpected storage structures.
 >
-> **Download Note**: When downloading files, if no destination path is specified, the file will be downloaded with the same path structure as stored in Cloud Storage. Use the optional third parameter to specify a custom destination path.
->
-> **Delete Note**: When deleting files, make sure to specify the exact path as stored in Cloud Storage. The deletion is permanent and cannot be undone.
->
-> **Bucket Deletion Warning**: Deleting a bucket will permanently remove all files and data within it. This action cannot be undone. Make sure the bucket is empty or you have backed up any important data before deletion.
->
-> **Force Delete Warning**: Using `--force` will permanently delete ALL objects in the bucket before deleting the bucket itself. This is irreversible and will remove all files, folders, and data within the bucket.
 
 ## Command Reference
 
@@ -109,20 +99,6 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 | `--delete-bucket <name> [--force]` | Delete a bucket (use --force for non-empty buckets) | `./gcpcli.py cloud-storage --delete-bucket my-bucket --force` |
 | `--force` | Force delete bucket (delete all objects first) | `./gcpcli.py cloud-storage --delete-bucket my-bucket --force` |
 | `--region <region>` | Specify the region for bucket creation | `./gcpcli.py cloud-storage --create-bucket my-bucket --region us-central1` |
-
-## Common GCP Regions
-
-Here are some commonly used GCP regions for bucket creation:
-
-- `us-central1` (Iowa)
-- `us-east1` (South Carolina)
-- `us-west1` (Oregon)
-- `us-west2` (Los Angeles)
-- `europe-west1` (Belgium)
-- `europe-west2` (London)
-- `asia-east1` (Taiwan)
-- `asia-southeast1` (Singapore)
-- `australia-southeast1` (Sydney)
 
 ## Notes
 
