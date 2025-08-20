@@ -103,8 +103,5 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 - Bucket names must start and end with a letter or number
 - If no region is specified, the bucket will be created in the default location (usually `us-central1`)
 - Make sure your service account has the necessary Storage permissions
-- Bucket creation is an idempotent operation - if the bucket already exists, the command will succeed
-- The `--list-buckets` command shows bucket names, locations, and location types for all buckets in your project
 - When uploading files, the file path you provide will be preserved in the Cloud Storage object name
-- Ensure the file exists and is accessible before uploading
 - Uploaded files maintain their original filename and path structure in Cloud Storage
