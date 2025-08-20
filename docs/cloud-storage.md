@@ -74,18 +74,13 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py cloud-storage --delete-file my-bucket-name /path/to/file.txt
 ```
 
-**Delete a file with relative path:**
-```bash
-./gcpcli.py cloud-storage --delete-file my-bucket-name ./file.txt
-```
-
 > **Important Note**: When uploading files, GCP will create the underlying "path" structure in Cloud Storage based on the file path you provide. For example:
 > - If you upload `~/hello.txt`, GCP will store it as `/Users/youruser/hello.txt`
 > - If you upload `./file.txt`, GCP will store it as `./file.txt` using `./` as the folder name.
 > - If you upload `/absolute/path/file.txt`, GCP will store it as `/absolute/path/file.txt`
 >
 > Consider using simple filenames or organizing your uploads with specific paths to avoid unexpected storage structures.
->
+> The same rules apply when downloading and deleting files.
 
 ## Command Reference
 
