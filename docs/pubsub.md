@@ -30,7 +30,7 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py pubsub --delete-topic mytopic
 ```
 
-> **Important Note**: Deleting a topic will permanently remove it. However, subscriptions to the topic will remain and must be deleted separately. This action cannot be undone. Make sure you have backed up any important data before deletion.
+> **Important Note**: Deleting a topic will permanently remove it. However, subscriptions to the topic will remain but but their `topic` field is set to `_deleted-topic_`.
 
 ### Subscription Management
 
