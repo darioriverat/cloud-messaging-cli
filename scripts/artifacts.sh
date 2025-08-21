@@ -18,7 +18,6 @@ else
 fi
 
 
-
 # Function to display usage
 show_usage() {
     echo "Usage: $0 <command> [options]"
@@ -28,6 +27,7 @@ show_usage() {
     echo "  tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]  Tag local image for registry submission"
     echo "  push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>  Push Docker image to registry"
     echo "  auth-docker-location <LOCATION>  Configure Docker authentication for the specified location"
+    echo "  docker config  Display Docker configuration"
     echo ""
     echo "Options:"
     echo "  --location <LOCATION>  Specify the repository location (required for create-docker-repository and push-docker-image, optional for tag-docker-image)"
@@ -40,12 +40,8 @@ show_usage() {
     echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 auth-docker-location us-central1"
+    echo "  $0 docker config"
     echo ""
-    echo "Environment Variables:"
-    echo "  GCP_PROJECT_ID: Set in .env file or environment to specify the GCP project"
-    echo ""
-    echo "For more information about gcloud artifacts repositories, run:"
-    echo "  gcloud artifacts repositories --help"
 }
 
 # Function to create Docker repository
@@ -302,6 +298,61 @@ auth_docker_location() {
     echo "Successfully configured Docker authentication for $registry_url"
 }
 
+# Function to display Docker configuration
+docker_config() {
+    local subcommand=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                if [[ -z "$subcommand" ]]; then
+                    subcommand="$1"
+                else
+                    echo "Error: Too many arguments"
+                    show_usage
+                    exit 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    # Validate required arguments
+    if [[ -z "$subcommand" ]]; then
+        echo "Error: Subcommand is required"
+        echo "Usage: $0 docker <SUBCOMMAND>"
+        echo "Available subcommands: config"
+        exit 1
+    fi
+
+    case "$subcommand" in
+        "config")
+            echo "Displaying Docker configuration..."
+            if [[ -f ~/.docker/config.json ]]; then
+                cat ~/.docker/config.json | jq .
+            else
+                echo "Docker configuration file not found at ~/.docker/config.json"
+                exit 1
+            fi
+            ;;
+        *)
+            echo "Error: Unknown subcommand '$subcommand'"
+            echo "Available subcommands: config"
+            exit 1
+            ;;
+    esac
+}
+
 # Main script logic
 main() {
     # Check if at least one argument is provided
@@ -325,6 +376,9 @@ main() {
             ;;
         "auth-docker-location")
             auth_docker_location "$@"
+            ;;
+        "docker")
+            docker_config "$@"
             ;;
         "help"|"--help"|"-h")
             show_usage
