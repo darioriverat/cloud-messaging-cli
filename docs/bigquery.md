@@ -17,17 +17,17 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 
 **Create a dataset:**
 ```bash
-./gcpcli.py bigquery --create-dataset my-dataset-name
+./gcpcli.py bigquery --create-dataset my_dataset_name
 ```
 
 **Delete a dataset:**
 ```bash
-./gcpcli.py bigquery --delete-dataset my-dataset-name
+./gcpcli.py bigquery --delete-dataset my_dataset_name
 ```
 
 **Delete a dataset with force (deletes all tables first):**
 ```bash
-./gcpcli.py bigquery --delete-dataset my-dataset-name --force
+./gcpcli.py bigquery --delete-dataset my_dataset_name --force
 ```
 
 > **Important Note**: Deleting a dataset will permanently remove it and all its tables and data. This action cannot be undone. The `--force` option will delete all tables in the dataset before deleting the dataset itself.
@@ -36,37 +36,43 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 
 **Create a table in a dataset:**
 ```bash
-./gcpcli.py bigquery --create-table my-dataset-name my-table-name
+./gcpcli.py bigquery --create-table my_dataset_name my-table-name
 ```
 
 **Create a table with schema:**
 ```bash
-./gcpcli.py bigquery --create-table my-dataset-name my-table-name --json-schema schema.json
+./gcpcli.py bigquery --create-table my_dataset_name my-table-name --json-schema schema.json
 ```
+
+> **Note**: For details about the schema structure and field types available check `examples/bigquery/schema_example.json`.
 
 **Update a table's schema:**
 ```bash
-./gcpcli.py bigquery --update-table my-dataset-name my-table-name --json-schema schema.json
+./gcpcli.py bigquery --update-table my_dataset_name my-table-name --json-schema schema.json
 ```
+
+> **Note**: For table updates the schema file must match at least the current table structure. We can add new fields in the JSON file.
 
 **Delete a table:**
 ```bash
-./gcpcli.py bigquery --delete-table my-dataset-name my-table-name
+./gcpcli.py bigquery --delete-table my_dataset_name my-table-name
 ```
 
 **Load CSV data into a table:**
 ```bash
-./gcpcli.py bigquery --load-csv my-dataset-name my-table-name path/to/data.csv
+./gcpcli.py bigquery --load-csv my_dataset_name my-table-name path/to/data.csv
 ```
+
+> **Example**: A valida CSV is defined at `examples/bigquery/simple_schema.csv` for the schema `examples/bigquery/simple_schema.json`.
 
 **Load CSV with header row:**
 ```bash
-./gcpcli.py bigquery --load-csv my-dataset-name my-table-name path/to/data.csv --skip-rows 1
+./gcpcli.py bigquery --load-csv my_dataset_name my-table-name path/to/data.csv --skip-rows 1
 ```
 
 **Execute a query from command line:**
 ```bash
-./gcpcli.py bigquery --query "SELECT * FROM my-dataset-name.my-table-name LIMIT 10"
+./gcpcli.py bigquery --query "SELECT * FROM my_dataset_name.my-table-name LIMIT 10"
 ```
 
 **Execute a query from a file:**
