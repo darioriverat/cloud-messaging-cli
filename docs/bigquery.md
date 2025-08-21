@@ -134,16 +134,6 @@ When loading CSV data into BigQuery tables, consider the following:
 - **Parallel Loading**: Multiple files can be loaded simultaneously
 - **Error Handling**: Check job status for any loading errors
 
-### **Common Use Cases:**
-```bash
-# Load standard CSV
-./gcpcli.py bigquery --load-csv my-dataset my-table data.csv
-
-# Load into table with defined schema
-./gcpcli.py bigquery --create-table my-dataset my-table --json-schema schema.json
-./gcpcli.py bigquery --load-csv my-dataset my-table data.csv
-```
-
 ## Query Execution
 
 BigQuery provides powerful SQL querying capabilities. The CLI supports multiple ways to execute queries:
@@ -159,40 +149,7 @@ BigQuery provides powerful SQL querying capabilities. The CLI supports multiple 
 - **Content**: Standard BigQuery SQL syntax
 - **Size**: No practical limit for query files
 
-### **Query Considerations:**
-- **Project Context**: Queries run in the context of your GCP project
-- **Dataset References**: Use `project.dataset.table` or `dataset.table` format
-- **Cost Management**: Monitor query costs in BigQuery console
-- **Result Limits**: Large result sets are handled automatically
-- **Error Handling**: SQL syntax errors are reported clearly
-
-### **Common Query Patterns:**
-```bash
-# Simple SELECT from command line
-./gcpcli.py bigquery --query "SELECT * FROM my-dataset.my-table LIMIT 10"
-
-# Aggregation from command line
-./gcpcli.py bigquery --query "SELECT COUNT(*) FROM my-dataset.my-table"
-
-# Complex query from file
-./gcpcli.py bigquery --query-file complex_analysis.sql
-
-# Parameterized-like query from command line
-./gcpcli.py bigquery --query "SELECT * FROM my-dataset.my-table WHERE date >= '2024-01-01'"
-```
-
-### **Query File Example (`queries/employee_analysis.sql`):**
-```sql
-SELECT
-    department,
-    COUNT(*) as employee_count,
-    AVG(salary) as avg_salary,
-    MAX(salary) as max_salary
-FROM my-dataset.employees
-WHERE active = true
-GROUP BY department
-ORDER BY avg_salary DESC
-```
+> **Reference**: For detail information about syntax visit [Query syntax](https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax).
 
 ## Command Reference
 
@@ -208,9 +165,3 @@ ORDER BY avg_salary DESC
 | `--query-file <file>` | Execute SQL query from file | `./gcpcli.py bigquery --query-file query.sql` |
 | `--json-schema <file>` | JSON schema file for table creation/update | `./gcpcli.py bigquery --create-table my-dataset my-table --json-schema schema.json` |
 | `--force` | Force deletion (deletes all contained objects first) | `./gcpcli.py bigquery --delete-dataset my-dataset --force` |
-
-## Common BigQuery Locations
-
-Here are some commonly used BigQuery locations for dataset creation:
-
-- `
