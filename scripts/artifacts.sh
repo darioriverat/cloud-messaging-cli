@@ -43,6 +43,7 @@ show_usage() {
     echo "  tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]  Tag local image for registry submission"
     echo "  push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>  Push Docker image to registry"
     echo "  list-docker-images --repository <REPOSITORY> --location <LOCATION>  List Docker images in repository"
+    echo "  list-repositories [--location <LOCATION>]  List repositories in project"
     echo "  auth-docker-location <LOCATION>  Configure Docker authentication for the specified location"
     echo "  gcloud-auth-login  Authenticate with Google Cloud"
     echo "  gcloud-auth-logout  Logout from Google Cloud"
@@ -60,6 +61,8 @@ show_usage() {
     echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 list-docker-images --repository my-repo --location us-central1"
+    echo "  $0 list-repositories"
+    echo "  $0 list-repositories --location us-central1"
     echo "  $0 auth-docker-location us-central1"
     echo "  $0 gcloud-auth-login"
     echo "  $0 gcloud-auth-logout"
@@ -333,6 +336,50 @@ list_docker_images() {
     gcloud artifacts docker images list "$full_repository_path" --include-tags
 }
 
+# Function to list repositories in project
+list_repositories() {
+    local location=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --location)
+                location="$2"
+                shift 2
+                ;;
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                echo "Error: Unexpected argument $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    echo "Listing repositories in project: $project_id"
+
+    # Build the gcloud command
+    local gcloud_cmd="gcloud artifacts repositories list --project=$project_id"
+
+    # Add location filter if specified
+    if [[ -n "$location" ]]; then
+        gcloud_cmd="$gcloud_cmd --location=$location"
+        echo "Filtering by location: $location"
+    fi
+
+    # List repositories using gcloud artifacts
+    echo "Executing: $gcloud_cmd"
+    eval "$gcloud_cmd"
+}
+
 # Function to configure Docker authentication for a location
 auth_docker_location() {
     local location=""
@@ -566,6 +613,9 @@ main() {
             ;;
         "list-docker-images")
             list_docker_images "$@"
+            ;;
+        "list-repositories")
+            list_repositories "$@"
             ;;
         "auth-docker-location")
             auth_docker_location "$@"
