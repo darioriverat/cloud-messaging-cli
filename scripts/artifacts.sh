@@ -8,10 +8,25 @@ if [[ -f ".env" ]]; then
     export $(grep -v '^#' .env | xargs)
 fi
 
-# Set GCP project if GCP_PROJECT_ID is specified
+# Check current gcloud project and compare with .env file
 if [[ -n "$GCP_PROJECT_ID" ]]; then
-    gcloud config set core/project "$GCP_PROJECT_ID"
-    project_id="$GCP_PROJECT_ID"
+    # Get current project from gcloud config
+    current_project=$(gcloud config get-value core/project 2>/dev/null || echo "")
+
+    if [[ -n "$current_project" ]]; then
+        if [[ "$current_project" == "$GCP_PROJECT_ID" ]]; then
+            # Project already set to $GCP_PROJECT_ID, no update needed
+            project_id="$GCP_PROJECT_ID"
+        else
+            # Updating project from $current_project to $GCP_PROJECT_ID
+            gcloud config set core/project "$GCP_PROJECT_ID"
+            project_id="$GCP_PROJECT_ID"
+        fi
+    else
+        # No project currently set, setting to $GCP_PROJECT_ID
+        gcloud config set core/project "$GCP_PROJECT_ID"
+        project_id="$GCP_PROJECT_ID"
+    fi
 else
     echo "Error: GCP_PROJECT_ID not set. Please set it in the .env file."
     exit 1
