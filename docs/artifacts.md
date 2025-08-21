@@ -57,6 +57,23 @@ GCP_PROJECT_ID=your-gcp-project-id
 ./gcpcli.sh artifacts docker config
 ```
 
+### Google Cloud Authentication
+
+**Login to Google Cloud:**
+```bash
+./gcpcli.sh artifacts gcloud-auth-login
+```
+
+**Logout from current account:**
+```bash
+./gcpcli.sh artifacts gcloud-auth-logout
+```
+
+**Check authentication status:**
+```bash
+./gcpcli.sh artifacts gcloud-auth-status
+```
+
 **Complete workflow example:**
 ```bash
 # 1. Configure Docker authentication
@@ -79,6 +96,9 @@ docker build -t myapp:latest .
 
 # 7. Check Docker configuration
 ./gcpcli.sh artifacts docker config
+
+# 8. Check authentication status
+./gcpcli.sh artifacts gcloud-auth-status
 ```
 
 ## Command Reference
@@ -90,6 +110,9 @@ docker build -t myapp:latest .
 | `tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]` | Tag local Docker image for registry submission | `./gcpcli.sh artifacts tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo` |
 | `push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>` | Push Docker image to registry | `./gcpcli.sh artifacts push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1` |
 | `list-docker-images --repository <REPOSITORY> --location <LOCATION>` | List Docker images in repository | `./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1` |
+| `gcloud-auth-login` | Authenticate with Google Cloud | `./gcpcli.sh artifacts gcloud-auth-login` |
+| `gcloud-auth-logout` | Logout from current account | `./gcpcli.sh artifacts gcloud-auth-logout` |
+| `gcloud-auth-status` | Check current authentication status | `./gcpcli.sh artifacts gcloud-auth-status` |
 | `docker config` | Display Docker configuration | `./gcpcli.sh artifacts docker config` |
 | `help` or `--help` or `-h` | Show help information | `./gcpcli.sh artifacts help` |
 
@@ -123,6 +146,14 @@ docker build -t myapp:latest .
 | `--repository` | Yes | Repository name | - |
 | `--location` | Yes | GCP region (e.g., `us-central1`, `us-east1`) | - |
 
+### Google Cloud Authentication Options
+
+| Command | Options | Description |
+|---------|---------|-------------|
+| `gcloud-auth-login` | None | No options required |
+| `gcloud-auth-logout` | None | No options required (automatically logs out current account) |
+| `gcloud-auth-status` | None | No options required |
+
 ### Docker Config Options
 
 | Option | Required | Description | Default |
@@ -139,6 +170,10 @@ docker build -t myapp:latest .
 - **Image Pushing**: The `push-docker-image` command requires the location to construct the registry URL
 - **Image Listing**: The `list-docker-images` command uses `gcloud artifacts docker images list` to display all images in a repository
 - **Docker Configuration**: The `docker config` command displays the contents of `~/.docker/config.json` using `jq` for formatted output
+- **Google Cloud Authentication**:
+  - `gcloud-auth-login`: Authenticates with Google Cloud using `gcloud auth login`
+  - `gcloud-auth-logout`: Automatically logs out the current account using `gcloud auth revoke`
+  - `gcloud-auth-status`: Shows current account, project, and authentication status
 - **Common GCP Regions**: Available regions include:
   - `us-central1` (default)
   - `us-east1`

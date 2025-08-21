@@ -8,6 +8,7 @@ if [[ -f ".env" ]]; then
     export $(grep -v '^#' .env | xargs)
 fi
 
+
 # Check current gcloud project and compare with .env file
 if [[ -n "$GCP_PROJECT_ID" ]]; then
     # Get current project from gcloud config
@@ -43,6 +44,9 @@ show_usage() {
     echo "  push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>  Push Docker image to registry"
     echo "  list-docker-images --repository <REPOSITORY> --location <LOCATION>  List Docker images in repository"
     echo "  auth-docker-location <LOCATION>  Configure Docker authentication for the specified location"
+    echo "  gcloud-auth-login  Authenticate with Google Cloud"
+    echo "  gcloud-auth-logout  Logout from Google Cloud"
+    echo "  gcloud-auth-status  Check current authentication status"
     echo "  docker config  Display Docker configuration"
     echo ""
     echo "Options:"
@@ -57,6 +61,9 @@ show_usage() {
     echo "  $0 push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 list-docker-images --repository my-repo --location us-central1"
     echo "  $0 auth-docker-location us-central1"
+    echo "  $0 gcloud-auth-login"
+    echo "  $0 gcloud-auth-logout"
+    echo "  $0 gcloud-auth-status"
     echo "  $0 docker config"
     echo ""
 }
@@ -429,6 +436,113 @@ docker_config() {
     esac
 }
 
+# Function to authenticate with Google Cloud
+gcloud_auth_login() {
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                echo "Error: Unexpected argument $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    echo "Authenticating with Google Cloud..."
+
+    # Authenticate with Google Cloud
+    echo "Executing: gcloud auth login"
+    gcloud auth login
+
+    echo "Successfully authenticated with Google Cloud"
+}
+
+# Function to logout from Google Cloud
+gcloud_auth_logout() {
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                echo "Error: Unexpected argument $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    # Get current account
+    local account=$(gcloud config get core/account 2>/dev/null || echo "")
+
+    if [[ -n "$account" ]]; then
+        echo "Logging out current account: $account"
+        echo "Executing: gcloud auth revoke \"$account\""
+        gcloud auth revoke "$account"
+        echo "Successfully logged out account: $account"
+    else
+        echo "No account currently logged in"
+        exit 1
+    fi
+}
+
+# Function to check current authentication status
+gcloud_auth_status() {
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                echo "Error: Unexpected argument $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    echo "Checking Google Cloud authentication status..."
+
+    # Get current account
+    local account=$(gcloud config get core/account 2>/dev/null || echo "")
+    local project=$(gcloud config get core/project 2>/dev/null || echo "")
+
+    echo "Current Account: ${account:-'Not set'}"
+    echo "Current Project: ${project:-'Not set'}"
+
+    if [[ -n "$account" ]]; then
+        echo "Status: Authenticated"
+        exit 0
+    else
+        echo "Status: Not authenticated"
+        exit 1
+    fi
+}
+
 # Main script logic
 main() {
     # Check if at least one argument is provided
@@ -455,6 +569,15 @@ main() {
             ;;
         "auth-docker-location")
             auth_docker_location "$@"
+            ;;
+        "gcloud-auth-login")
+            gcloud_auth_login "$@"
+            ;;
+        "gcloud-auth-logout")
+            gcloud_auth_logout "$@"
+            ;;
+        "gcloud-auth-status")
+            gcloud_auth_status "$@"
             ;;
         "docker")
             docker_config "$@"
