@@ -80,13 +80,6 @@ GCP_SERVICE_ACCOUNT_PATH=path/to/your/service-account.json
 ./gcpcli.py bigquery --query-file path/to/query.sql
 ```
 
-**Execute a direct query:**
-```bash
-./gcpcli.py bigquery --query "SELECT COUNT(*) FROM my-dataset.my-table"
-```
-
-> **Important Note**: Deleting a table will permanently remove it and all its data. This action cannot be undone. Make sure you have backed up any important data before deletion.
-
 ## JSON Schema Format
 
 The JSON schema file should contain the complete table schema in the following format:
