@@ -329,8 +329,8 @@ list_docker_images() {
     echo "Listing Docker images in repository: $full_repository_path"
 
     # List images using gcloud artifacts
-    echo "Executing: gcloud artifacts docker images list \"$full_repository_path\""
-    gcloud artifacts docker images list "$full_repository_path"
+    echo "Executing: gcloud artifacts docker images list \"$full_repository_path\" --include-tags"
+    gcloud artifacts docker images list "$full_repository_path" --include-tags
 }
 
 # Function to configure Docker authentication for a location
