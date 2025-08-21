@@ -41,6 +41,7 @@ show_usage() {
     echo "  create-docker-repository <NAME> [--location <LOCATION>]  Create a new Docker repository"
     echo "  tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]  Tag local image for registry submission"
     echo "  push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>  Push Docker image to registry"
+    echo "  list-docker-images --repository <REPOSITORY> --location <LOCATION>  List Docker images in repository"
     echo "  auth-docker-location <LOCATION>  Configure Docker authentication for the specified location"
     echo "  docker config  Display Docker configuration"
     echo ""
@@ -54,6 +55,7 @@ show_usage() {
     echo "  $0 create-docker-repository my-repo --location us-central1"
     echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1"
+    echo "  $0 list-docker-images --repository my-repo --location us-central1"
     echo "  $0 auth-docker-location us-central1"
     echo "  $0 docker config"
     echo ""
@@ -265,6 +267,65 @@ push_docker_image() {
     echo "Successfully pushed $image_name to $full_remote_image"
 }
 
+# Function to list Docker images in a repository
+list_docker_images() {
+    local repository=""
+    local location=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --repository)
+                repository="$2"
+                shift 2
+                ;;
+            --location)
+                location="$2"
+                shift 2
+                ;;
+            --help|-h)
+                show_usage
+                exit 0
+                ;;
+            -*)
+                echo "Error: Unknown option $1"
+                show_usage
+                exit 1
+                ;;
+            *)
+                echo "Error: Unexpected argument $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    # Validate required arguments
+    if [[ -z "$repository" ]]; then
+        echo "Error: --repository is required"
+        echo "Usage: $0 list-docker-images --repository <REPOSITORY> --location <LOCATION>"
+        exit 1
+    fi
+
+    if [[ -z "$location" ]]; then
+        echo "Error: --location is required"
+        echo "Usage: $0 list-docker-images --repository <REPOSITORY> --location <LOCATION>"
+        exit 1
+    fi
+
+    # Build registry URL from location
+    local registry_url="${location}-docker.pkg.dev"
+
+    # Construct the full repository path
+    local full_repository_path="$registry_url/$project_id/$repository"
+
+    echo "Listing Docker images in repository: $full_repository_path"
+
+    # List images using gcloud artifacts
+    echo "Executing: gcloud artifacts docker images list \"$full_repository_path\""
+    gcloud artifacts docker images list "$full_repository_path"
+}
+
 # Function to configure Docker authentication for a location
 auth_docker_location() {
     local location=""
@@ -388,6 +449,9 @@ main() {
             ;;
         "push-docker-image")
             push_docker_image "$@"
+            ;;
+        "list-docker-images")
+            list_docker_images "$@"
             ;;
         "auth-docker-location")
             auth_docker_location "$@"
