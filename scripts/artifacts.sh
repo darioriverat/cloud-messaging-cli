@@ -343,13 +343,12 @@ list_docker_images() {
 
     # Add any additional gcloud arguments
     if [[ ${#gcloud_args[@]} -gt 0 ]]; then
-        gcloud_cmd="$gcloud_cmd ${gcloud_args[*]}"
         echo "Additional gcloud options: ${gcloud_args[*]}"
     fi
 
     # List images using gcloud artifacts
-    echo "Executing: $gcloud_cmd"
-    eval "$gcloud_cmd"
+    echo "Executing: gcloud artifacts docker images list \"$full_repository_path\" ${gcloud_args[*]}"
+    gcloud artifacts docker images list "$full_repository_path" "${gcloud_args[@]}"
 }
 
 # Function to list repositories in project
