@@ -48,12 +48,43 @@ GCP_PROJECT_ID=your-gcp-project-id
 **List Docker images in a repository:**
 ```bash
 ./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --filter "name:latest"
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --format "table(name,tags)"
 ```
 
 **List repositories in project:**
 ```bash
 ./gcpcli.sh artifacts list-repositories
 ./gcpcli.sh artifacts list-repositories --location us-central1
+```
+
+### Advanced Image Listing with Native gcloud Options
+
+The `list-docker-images` command supports all native gcloud artifacts docker images list options:
+
+**Filter images by name:**
+```bash
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --filter "name:latest"
+```
+
+**Custom output format:**
+```bash
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --format "table(name,tags,createTime)"
+```
+
+**Limit results:**
+```bash
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --limit 10
+```
+
+**Filter by multiple criteria:**
+```bash
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --filter "name:v1* AND createTime>2024-01-01"
+```
+
+**JSON output:**
+```bash
+./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1 --format json
 ```
 
 ### Docker Configuration
@@ -118,7 +149,7 @@ docker build -t myapp:latest .
 | `create-docker-repository <NAME> --location <LOCATION>` | Create a new Docker repository | `./gcpcli.sh artifacts create-docker-repository my-repo --location us-central1` |
 | `tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]` | Tag local Docker image for registry submission | `./gcpcli.sh artifacts tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo` |
 | `push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>` | Push Docker image to registry | `./gcpcli.sh artifacts push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1` |
-| `list-docker-images --repository <REPOSITORY> --location <LOCATION>` | List Docker images in repository | `./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1` |
+| `list-docker-images --repository <REPOSITORY> --location <LOCATION> [gcloud-options...]` | List Docker images in repository | `./gcpcli.sh artifacts list-docker-images --repository my-repo --location us-central1` |
 | `list-repositories [--location <LOCATION>]` | List repositories in project | `./gcpcli.sh artifacts list-repositories` |
 | `gcloud-auth-login` | Authenticate with Google Cloud | `./gcpcli.sh artifacts gcloud-auth-login` |
 | `gcloud-auth-logout` | Logout from current account | `./gcpcli.sh artifacts gcloud-auth-logout` |
@@ -155,6 +186,7 @@ docker build -t myapp:latest .
 |--------|----------|-------------|---------|
 | `--repository` | Yes | Repository name | - |
 | `--location` | Yes | GCP region (e.g., `us-central1`, `us-east1`) | - |
+| `[gcloud-options...]` | No | Additional gcloud artifacts docker images list options (e.g., `--filter`, `--format`, `--limit`) | - |
 
 ### List Repositories Options
 
@@ -184,7 +216,7 @@ docker build -t myapp:latest .
 - **Repository Format**: Currently supports Docker format repositories
 - **Image Tagging**: The `tag-docker-image` command automatically constructs the full remote image name using the format: `{location}-docker.pkg.dev/{project-id}/{repository}/{remote-image}`
 - **Image Pushing**: The `push-docker-image` command requires the location to construct the registry URL
-- **Image Listing**: The `list-docker-images` command uses `gcloud artifacts docker images list` to display all images in a repository
+- **Image Listing**: The `list-docker-images` command uses `gcloud artifacts docker images list` to display all images in a repository. It supports additional native gcloud options like `--filter`, `--format`, `--limit`, etc.
 - **Repository Listing**: The `list-repositories` command uses `gcloud artifacts repositories list` to display all repositories in the project, with optional location filtering
 - **Docker Configuration**: The `docker config` command displays the contents of `~/.docker/config.json` using `jq` for formatted output
 - **Google Cloud Authentication**:

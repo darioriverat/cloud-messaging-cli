@@ -42,7 +42,7 @@ show_usage() {
     echo "  create-docker-repository <NAME> [--location <LOCATION>]  Create a new Docker repository"
     echo "  tag-docker-image --local-image <LOCAL_IMAGE> --remote-image <REMOTE_IMAGE> --repository <REPOSITORY> [--location <LOCATION>]  Tag local image for registry submission"
     echo "  push-docker-image <IMAGE_NAME> --repository <REPOSITORY> --location <LOCATION>  Push Docker image to registry"
-    echo "  list-docker-images --repository <REPOSITORY> --location <LOCATION>  List Docker images in repository"
+    echo "  list-docker-images --repository <REPOSITORY> --location <LOCATION> [gcloud-options...]  List Docker images in repository"
     echo "  list-repositories [--location <LOCATION>]  List repositories in project"
     echo "  auth-docker-location <LOCATION>  Configure Docker authentication for the specified location"
     echo "  gcloud-auth-login  Authenticate with Google Cloud"
@@ -61,6 +61,7 @@ show_usage() {
     echo "  $0 tag-docker-image --local-image myapp:latest --remote-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 push-docker-image myapp:v1.0.0 --repository my-repo --location us-central1"
     echo "  $0 list-docker-images --repository my-repo --location us-central1"
+    echo "  $0 list-docker-images --repository my-repo --location us-central1 --filter something"
     echo "  $0 list-repositories"
     echo "  $0 list-repositories --location us-central1"
     echo "  $0 auth-docker-location us-central1"
@@ -281,6 +282,7 @@ push_docker_image() {
 list_docker_images() {
     local repository=""
     local location=""
+    local gcloud_args=()
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -298,9 +300,14 @@ list_docker_images() {
                 exit 0
                 ;;
             -*)
-                echo "Error: Unknown option $1"
-                show_usage
-                exit 1
+                # Pass through any other gcloud options
+                gcloud_args+=("$1")
+                if [[ "$1" == --* && "$2" != --* && "$2" != "" ]]; then
+                    gcloud_args+=("$2")
+                    shift 2
+                else
+                    shift
+                fi
                 ;;
             *)
                 echo "Error: Unexpected argument $1"
@@ -331,9 +338,18 @@ list_docker_images() {
 
     echo "Listing Docker images in repository: $full_repository_path"
 
+    # Build the gcloud command
+    local gcloud_cmd="gcloud artifacts docker images list \"$full_repository_path\""
+
+    # Add any additional gcloud arguments
+    if [[ ${#gcloud_args[@]} -gt 0 ]]; then
+        gcloud_cmd="$gcloud_cmd ${gcloud_args[*]}"
+        echo "Additional gcloud options: ${gcloud_args[*]}"
+    fi
+
     # List images using gcloud artifacts
-    echo "Executing: gcloud artifacts docker images list \"$full_repository_path\" --include-tags"
-    gcloud artifacts docker images list "$full_repository_path" --include-tags
+    echo "Executing: $gcloud_cmd"
+    eval "$gcloud_cmd"
 }
 
 # Function to list repositories in project
@@ -645,4 +661,3 @@ main() {
 
 # Run main function with all arguments
 main "$@"
-
